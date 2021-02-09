@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  db:
+      container_name: pg_bookfinder
+      image: postgres
+      restart: always
+      environment:
+        POSTGRES_PASSWORD: root
+      ports:
+        - 5432:5432      
+  backend:
+      container_name: backend
+      image: backend
+      restart: always
+      ports:
+        - 5000:5000
+  frontend:
+      container_name: frontend
+      image: frontend
+      restart: always
+      ports:
+        - 8080:8080
+  
