@@ -17,9 +17,16 @@ $ source env/bin/activate
 (env)$ pip install -r requirements.txt
 ```
 
+## Run all database migrations
+```
+(env)$ python manage.py db init
+(env)$ python manage.py db migrate
+(env)$ python manage.py db upgrade
+```
+
 ## Run the server application
 ```
-(env)$ python app.py
+(env)$ python runserver.py
 ```
 
 Navigate to [http://localhost:5000](http://localhost:5000)
