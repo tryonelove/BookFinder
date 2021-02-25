@@ -21,3 +21,28 @@ class Book(BaseModel, db.Model):
         return dict(book_id=self.book_id,
                     title=self.title,
                     year=self.year)
+
+
+class Genres(BaseModel, db.Model):
+    __tablename__ = "genres"
+
+    genre_id = db.Column(db.Integer,
+                         primary_key=True,
+                         unique=True,
+                         autoincrement=True)
+    genre_description = db.Column(db.String(), unique=True)
+
+
+class BooksGenres(BaseModel, db.Model):
+    __tablename__ = "books_genres"
+
+    book_id = db.Column(db.Integer,
+                        db.ForeignKey('books.book_id'),
+                        nullable=False,
+                        primary_key=True,
+                        unique=False)
+    genre_id = db.Column(db.Integer,
+                         db.ForeignKey('genres.genre_id'),
+                         nullable=False,
+                         primary_key=True,
+                         unique=False)

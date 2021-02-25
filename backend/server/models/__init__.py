@@ -1,6 +1,6 @@
 from .abc import BaseModel, db
 from server.models.user import User, UserBook, UserInfo
-from server.models.book import Book
+from server.models.book import Book, Genres, BooksGenres    
 from server.models.author import Author, AuthorBook
 
 __all__ = ['BaseModel',
@@ -9,4 +9,7 @@ __all__ = ['BaseModel',
            'UserBook',
            'UserInfo',
            'Author',
-           'AuthorBook']
+           'AuthorBook',
+           'Genres',
+           'BooksGenres',
+           'db']

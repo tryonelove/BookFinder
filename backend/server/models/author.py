@@ -8,7 +8,8 @@ class Author(BaseModel, db.Model):
                           primary_key=True,
                           unique=True,
                           nullable=False)
-    author_name = db.Column(db.String())
+    author_name = db.Column(db.String(),
+                            unique=True)
 
     def __init(self, author_id: int, author_name: str):
         self.author_id = author_id
@@ -20,8 +21,11 @@ class AuthorBook(BaseModel, db.Model):
 
     book_id = db.Column(db.Integer,
                         db.ForeignKey('books.book_id'),
-                        primary_key=True, unique=True, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('authors.author_id'))
+                        primary_key=True,
+                        nullable=False)
+    author_id = db.Column(db.Integer,
+                          db.ForeignKey('authors.author_id'),
+                          primary_key=True)
 
     def __init(self, book_id: int, author_id: int):
         self.book_id = book_id

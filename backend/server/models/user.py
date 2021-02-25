@@ -63,8 +63,12 @@ class UserBook(BaseModel, db.Model):
 
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
-                        primary_key=True, nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey('books.book_id'))
+                        nullable=False,
+                        primary_key=True)
+    book_id = db.Column(db.Integer,
+                        db.ForeignKey('books.book_id'),
+                        nullable=False,
+                        primary_key=True)
     rating = db.Column(db.Integer)
     status = db.Column(db.Integer)
 

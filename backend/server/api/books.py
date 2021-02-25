@@ -18,12 +18,12 @@ class Book(Resource):
     /api/books/<book_id> endpoint
     """
     def get(self, book_id):
-        book = BookRepository.get_by_id(book_id)
-        return book, 200
+        books = BookRepository.get_by_id(book_id)
+        return books, 200
 
     def delete(self, book_id):
-        book = BookRepository.delete(book_id)
-        return book, 204
+        books = BookRepository.delete(book_id)
+        return books, 204
 
 
 class Books(Resource):

@@ -72,6 +72,6 @@ class Logout(Resource):
         return {'status': 'ok'}, 200
 
 
-api.add_resource(Register, '/api/register')
-api.add_resource(Login, '/api/login')
-api.add_resource(Logout, '/api/logout')
+api.add_resource(Register, '/api/auth/register')
+api.add_resource(Login, '/api/auth/login')
+api.add_resource(Logout, '/api/auth/logout')
