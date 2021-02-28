@@ -10,23 +10,27 @@ auth_bp = Blueprint('auth', __name__)
 
 api = Api(auth_bp)
 
-parser = reqparse.RequestParser()
-parser.add_argument('email', type=str)
-parser.add_argument('password', type=str)
-parser.add_argument('first_name', type=str)
-parser.add_argument('last_name', type=str)
 
-
+@api.resource('/api/auth/register')
 class Register(Resource):
     """
-    /api/register endpoint
+    /api/auth/register endpoint
     """
+    def get_args(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', type=str)
+        parser.add_argument('password', type=str)
+        parser.add_argument('first_name', type=str)
+        parser.add_argument('last_name', type=str)
+        return parser.parse_args()
+
     def post(self):
-        args = parser.parse_args()
-        first_name = args['first_name']
-        last_name = args['last_name']
-        email = args['email']
-        password = args['password']
+        args = self.get_args()
+        first_name = args.get('first_name')
+        last_name = args.get('last_name')
+        email = args.get('email')
+        password = args.get('password')
+
         user = UserRepository.create(email=email,
                                      password=password)
         user = UserInfoRepository.create(user_id=user.user_id,
@@ -36,14 +40,22 @@ class Register(Resource):
         return user.to_dict(), 201
 
 
+@api.resource('/api/auth/login')
 class Login(Resource):
     """
-    /api/login endpoint
+    /api/auth/login endpoint
     """
+    def get_args(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', type=str)
+        parser.add_argument('password', type=str)
+        return parser.parse_args()
+
     def post(self):
-        args = parser.parse_args()
-        email = args['email']
-        password = args['password']
+        args = self.get_args()
+        email = args.get('email')
+        password = args.get('password')
+
         user = User.authenticate(email=email, password=password)
 
         if not user:
@@ -70,8 +82,3 @@ class Logout(Resource):
         if session.get("email") is not None:
             session['logged_in'] = False
         return {'status': 'ok'}, 200
-
-
-api.add_resource(Register, '/api/auth/register')
-api.add_resource(Login, '/api/auth/login')
-api.add_resource(Logout, '/api/auth/logout')

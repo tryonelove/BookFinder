@@ -4,44 +4,39 @@ from server.repositories import BookRepository
 from . import token_required
 
 api_books_bp = Blueprint('api_books_bp', __name__)
-
-parser = reqparse.RequestParser()
-parser.add_argument('book_id', type=int)
-parser.add_argument('title', type=str)
-parser.add_argument('year', type=str)
-
 api = Api(api_books_bp)
 
 
+@api.resource('/api/books/<book_id>')
 class Book(Resource):
     """
     /api/books/<book_id> endpoint
     """
     def get(self, book_id):
-        books = BookRepository.get_by_id(book_id)
-        return books, 200
+        return BookRepository.get_by_id(book_id)
 
     def delete(self, book_id):
-        books = BookRepository.delete(book_id)
-        return books, 204
+        return BookRepository.delete(book_id)
 
 
+@api.resource('/api/books', '/api/books/')
 class Books(Resource):
     """
     /api/books endpoint
     """
+    def get_args(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('book_id', type=int)
+        parser.add_argument('title', type=str)
+        parser.add_argument('year', type=str)
+        return parser.parse_args()
+
     def get(self):
-        books = BookRepository.get_all()
-        return books
+        return BookRepository.get_all()
 
-    @token_required
-    def post(self, user):
-        args = parser.parse_args()
-        book_id = args['book_id']
-        title = args['title']
-        year = args['year']
+    def post(self):
+        args = self.get_args()
+        book_id = args.get('book_id')
+        title = args.get('title')
+        year = args.get('year')
         return BookRepository.create(book_id, title, year)
-
-
-api.add_resource(Books, '/api/books')
-api.add_resource(Book, '/api/books/<book_id>')

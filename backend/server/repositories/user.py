@@ -15,7 +15,7 @@ class UserRepository:
             user.flush()
         except IntegrityError:
             User.rollback()
-            raise Exception('user already exists')
+            raise Exception('User already exists')
 
         return user
 
