@@ -1,6 +1,5 @@
 from sqlalchemy.exc import IntegrityError
 from server.models.user import User, UserInfo
-from werkzeug.security import generate_password_hash
 
 
 class UserRepository:
@@ -10,7 +9,7 @@ class UserRepository:
                password: str) -> dict:
         """ Create a user """
         try:
-            user = User(email=email, password=generate_password_hash(password))
+            user = User(email=email, password=password)
             user.save()
             user.flush()
         except IntegrityError:
@@ -39,6 +38,7 @@ class UserInfoRepository:
                             first_name=first_name,
                             last_name=last_name)
             user.save()
+            user.flush()
         except IntegrityError:
             User.rollback()
             raise Exception('user already exists')
