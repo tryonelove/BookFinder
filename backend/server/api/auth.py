@@ -5,6 +5,8 @@ from flask import Blueprint, session, current_app
 from flask_restful import Api, Resource, reqparse
 from server.models import User
 from server.repositories import UserRepository, UserInfoRepository
+from werkzeug.security import generate_password_hash
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -22,7 +24,8 @@ class Register(Resource):
         parser.add_argument('password', type=str)
         parser.add_argument('first_name', type=str)
         parser.add_argument('last_name', type=str)
-        return parser.parse_args()
+        args = parser.parse_args()
+        return args
 
     def post(self):
         args = self.get_args()
@@ -30,7 +33,6 @@ class Register(Resource):
         last_name = args.get('last_name')
         email = args.get('email')
         password = args.get('password')
-
         user = UserRepository.create(email=email,
                                      password=password)
         user = UserInfoRepository.create(user_id=user.user_id,
@@ -49,15 +51,14 @@ class Login(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('email', type=str)
         parser.add_argument('password', type=str)
-        return parser.parse_args()
+        args = parser.parse_args()
+        return args
 
     def post(self):
         args = self.get_args()
         email = args.get('email')
         password = args.get('password')
-
         user = User.authenticate(email=email, password=password)
-
         if not user:
             return {
                     'message': 'Invalid credentials',
