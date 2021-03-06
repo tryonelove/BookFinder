@@ -3,8 +3,8 @@ import datetime
 import jwt
 from flask import Blueprint, session, current_app
 from flask_restful import Api, Resource, reqparse
-from server.models import User
-from server.repositories import UserRepository, UserInfoRepository
+from backend.server.models import User
+from backend.server.repositories import UserRepository, UserInfoRepository
 
 auth_bp = Blueprint('auth', __name__)
 

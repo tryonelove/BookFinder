@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from server.models.user import User, UserInfo
+from backend.server.models.user import User, UserInfo
 from werkzeug.security import generate_password_hash
 
 

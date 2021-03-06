@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from server.models import Book, BooksGenres, AuthorBook
+from backend.server.models import Book, BooksGenres, AuthorBook
 
 
 class BookRepository:
