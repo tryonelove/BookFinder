@@ -3,8 +3,8 @@ import datetime
 import jwt
 from flask import Blueprint, session, current_app
 from flask_restful import Api, Resource, reqparse
-from backend.server.models import User
-from backend.server.repositories import UserRepository, UserInfoRepository
+from server.models import User
+from server.repositories import UserRepository, UserInfoRepository
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -14,7 +14,7 @@ api = Api(auth_bp)
 @api.resource('/api/auth/register')
 class Register(Resource):
     """
-    /api/auth/register endpoint
+    /api/aаuth/register endpoint
     """
     def get_args(self):
         parser = reqparse.RequestParser()

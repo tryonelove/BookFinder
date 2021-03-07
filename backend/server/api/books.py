@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_restful import Api, Resource, reqparse
-from backend.server.repositories import BookRepository
+from server.repositories import BookRepository
 from . import token_required
 
 api_books_bp = Blueprint('api_books_bp', __name__)
