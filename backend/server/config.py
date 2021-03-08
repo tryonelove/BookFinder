@@ -3,9 +3,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 POSTGRES = {
     'user': 'postgres',
-    'pw': 'root',
+    'pw': 'postgres',
     'db': 'BookFinder',
-    'host': '0.0.0.0',
+    'host': '172.24.0.3', # DOCKER CONTAINER IP (TO CHANGE!!!)
     'port': '5432',
 }
 
