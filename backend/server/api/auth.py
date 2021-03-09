@@ -14,7 +14,7 @@ api = Api(auth_bp)
 @api.resource('/api/auth/register')
 class Register(Resource):
     """
-    /api/auth/register endpoint
+    /api/aаuth/register endpoint
     """
     def get_args(self):
         parser = reqparse.RequestParser()

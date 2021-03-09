@@ -3,9 +3,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 POSTGRES = {
     'user': 'postgres',
-    'pw': 'root',
+    'pw': 'postgres',
     'db': 'BookFinder',
-    'host': '0.0.0.0',
+    'host': 'db',
     'port': '5432',
 }
 
@@ -15,7 +15,7 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = os.urandom(12)
-    SQLALCHEMY_DATABASE_URI = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    SQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://{POSTGRES["user"]}:{POSTGRES["pw"]}@{POSTGRES["host"]}:{POSTGRES["port"]}/{POSTGRES["db"]}'
 
 
 class ProductionConfig(Config):
