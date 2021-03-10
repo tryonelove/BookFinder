@@ -1,23 +1,36 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { authorize, register } from '@/api/auth';
+import { fetchBooks } from '@/api/books';
 import { isValidJwt, EventBus } from '@/utils';
 
 Vue.use(Vuex);
 
 const data = {
+  books: [],
+  currentBook: {},
   user: {},
-  jwt: '',
+  jwt: { token: localStorage.getItem('token') },
 };
 
 const actions = {
+  // Books management
+  loadBooks(context) {
+    return fetchBooks()
+      .then((response) => context.commit('setBooks', { books: response }));
+  },
+  loadBook(context, { id }) {
+    return fetchBooks()
+      .then((response) => context.commit('setBook', { book: response }));
+  },
+  // Authentication
   login(context, userData) {
     context.commit('setUserData', { userData });
     return authorize(userData)
       .then((response) => context.commit('setJwtToken', { jwt: response.data }))
       .catch((error) => {
         // eslint-disable-next-line
-        console.log('Error Authenticating: ', error);
+        console.log('Error while Authenticating: ', error);
         EventBus.$emit('failedAuthentication', error);
       });
   },
@@ -34,6 +47,15 @@ const actions = {
 };
 
 const mutations = {
+  // Books setters
+  setBooks(state, payload) {
+    state.surveys = payload.books;
+  },
+
+  setBook(state, payload) {
+    state.currentSurvey = payload.book;
+  },
+  // User data setters
   setUserData(state, payload) {
     // eslint-disable-next-line
     console.log('setUserData payload = ', payload);
@@ -48,7 +70,6 @@ const mutations = {
 };
 
 const getters = {
-  // reusable data accessors
   isAuthenticated(state) {
     return isValidJwt(state.jwt.token);
   },

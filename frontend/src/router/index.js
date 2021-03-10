@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/',
     component: HelloWorld,
-    props: { msg: 'dsadsa' },
+    props: { msg: 'Hello, username' },
     meta: { title: 'Home' },
     beforeEnter(to, from, next) {
       if (!store.getters.isAuthenticated) {
@@ -27,11 +27,29 @@ const routes = [
     path: '/register',
     component: Registration,
     meta: { title: 'Registration' },
+    beforeEnter(to, from, next) {
+      if (store.getters.isAuthenticated) {
+        next({
+          path: '/',
+        });
+      } else {
+        next();
+      }
+    },
   },
   {
     path: '/login',
     component: Login,
     meta: { title: 'Login' },
+    beforeEnter(to, from, next) {
+      if (store.getters.isAuthenticated) {
+        next({
+          path: '/',
+        });
+      } else {
+        next();
+      }
+    },
   },
 ];
 
