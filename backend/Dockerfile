@@ -1,11 +1,14 @@
 FROM python:3.9
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY . /usr/src/app
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install gunicorn==20.0.4
+
+COPY . /app
 
 EXPOSE 5000
 
-CMD ["python", "runserver.py"]
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ["sh", "entrypoint.sh"]
