@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask_restful import Api, Resource, reqparse
 from server.repositories import BookRepository
 from . import token_required
@@ -13,7 +13,7 @@ class Book(Resource):
     /api/books/<book_id> endpoint
     """
     def get(self, book_id):
-        return BookRepository.get_by_id(book_id)
+        return jsonify(BookRepository.get_by_id(book_id))
 
     def delete(self, book_id):
         return BookRepository.delete(book_id)

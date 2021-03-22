@@ -1,6 +1,5 @@
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from . import BaseModel, db
-
 
 class UserInfo(BaseModel, db.Model):
     __tablename__ = "users_info"
@@ -8,8 +7,8 @@ class UserInfo(BaseModel, db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
                         primary_key=True)
-    first_name = db.Column(db.String())
-    last_name = db.Column(db.String())
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
     role = db.Column(db.Integer)
 
     def __init(self, user_id: int,
@@ -32,18 +31,17 @@ class User(BaseModel, db.Model):
     user_id = db.Column(db.Integer,
                         primary_key=True,
                         autoincrement=True)
-    email = db.Column(db.String(), unique=True, nullable=False)
-    password = db.Column(db.String(), nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
 
-    def __init(self, email: str, password: str):
+    def __init__(self, email: str, password: str):
         self.email = email
-        self.password = password
+        self.password = generate_password_hash(password, method='sha256')
 
     @classmethod
     def authenticate(cls, **kwargs):
         email = kwargs.get('email')
         password = kwargs.get('password')
-
         if not email or not password:
             return None
 

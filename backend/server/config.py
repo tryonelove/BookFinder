@@ -15,6 +15,7 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = os.urandom(12)
+    JSON_AS_ASCII = False
     SQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://{POSTGRES["user"]}:{POSTGRES["pw"]}@{POSTGRES["host"]}:{POSTGRES["port"]}/{POSTGRES["db"]}'
 
 
