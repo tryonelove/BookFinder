@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from server.models import Book, BooksGenres, AuthorBook
+from server.models import Book, BooksGenres, AuthorBook, UserBook, User
 
 
 class BookRepository:
@@ -22,7 +22,7 @@ class BookRepository:
         Query a book by book_id
 
         Returns json representation
-        of book 
+        of book
         """
         book = Book.query.filter_by(book_id=book_id).first()
         if book is None:
@@ -30,12 +30,21 @@ class BookRepository:
         return book.to_dict()
 
     @staticmethod
-    def get_all() -> list:
+    def get_all(email: str = None) -> list:
         """
         Query all books
         """
-        books = Book.query.all()
-        return [book.to_dict() for book in books]
+        books = []
+        if email is None:
+            books = Book.query.all()
+            books = [book.to_dict() for book in books]
+        else:
+            user = User.query.filter_by(email=email).first()
+            user_id = user.get("user_id", None)
+            if user_id is not None:
+                user_books = UserBook.query.filter_by(user_id=user_id).first()
+                books = [book.to_dict() for book in user_books]
+        return books
 
     @staticmethod
     def delete(book_id: int) -> dict:
@@ -54,3 +63,15 @@ class BookRepository:
         else:
             book_id = -1
         return {"book_id": int(book_id)}
+
+    @staticmethod
+    def update(book_id: int, user_email: str, args: list) -> dict:
+        user = User.query.filter_by(email=user_email).first()
+        if user is not None and user.get("user_id", None) is not None:
+            book = UserBook.query.filter_by(book_id=book_id, user_id=user.get("user_id")).first()
+            if book is not None:
+                for characteristic in args:
+                    setattr(book, characteristic, getattr(args, characteristic))
+                book.save()
+                return book.to_dict()
+        return {}
