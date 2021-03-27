@@ -9,8 +9,13 @@ def create_app():
 
     from server.api.auth import auth_bp
     from server.api.books import api_books_bp
+    from server.api.registration import registration_bp
+    from server.api.user import user_bp
+  
     app.register_blueprint(auth_bp)
     app.register_blueprint(api_books_bp)
+    app.register_blueprint(registration_bp)
+    app.register_blueprint(user_bp)
     
     from server.models import db
     db.init_app(app)

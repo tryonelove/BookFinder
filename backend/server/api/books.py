@@ -29,7 +29,7 @@ class Book(Resource):
         if email is None:
             return {}
         args = self.get_args()
-        return BookRepository.update(book_id, email, args)
+        return BookRepository.update(book_id, args)
 
 
 @api.resource('/api/books', '/api/books/')
