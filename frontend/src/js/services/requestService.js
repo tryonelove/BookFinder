@@ -1,5 +1,4 @@
 async function makeRequest(requestType, URL, data) {
-  console.log(data)
   let response = await fetch(`http://localhost:5000${URL}`, {
     method: `${requestType}`,
     mode: 'cors',
@@ -8,7 +7,6 @@ async function makeRequest(requestType, URL, data) {
     },
     body:  JSON.stringify(data),
   });
-  console.log(response.url);
   return await response.json();
 }
 
