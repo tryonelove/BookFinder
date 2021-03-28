@@ -1,23 +1,40 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_restful import Api
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
+from flask_apispec.extension import FlaskApiSpec
+from server.api import Register
+
+
+def register_flask_blueprints(app: Flask):
+    from server.api.auth import auth_bp
+    from server.api.books import api_books_bp
+    from server.api.registration import registration_bp
+    from server.api.user import user_bp
+
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(api_books_bp)
+    app.register_blueprint(registration_bp)
+    app.register_blueprint(user_bp)
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object('server.config.DevelopmentConfig')
-    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    app.config['BUNDLE_ERRORS'] = True
+    app.url_map.strict_slashes = False
 
-    from server.api.auth import auth_bp
-    from server.api.books import api_books_bp
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(api_books_bp)
-    
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    register_flask_blueprints(app)
+
     from server.models import db
     db.init_app(app)
-    
+
     return app
+
 
 app = create_app()
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000)

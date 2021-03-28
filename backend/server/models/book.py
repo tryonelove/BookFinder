@@ -23,16 +23,6 @@ class Book(BaseModel, db.Model):
                     year=self.year)
 
 
-class Genres(BaseModel, db.Model):
-    __tablename__ = "genres"
-
-    genre_id = db.Column(db.Integer,
-                         primary_key=True,
-                         unique=True,
-                         autoincrement=True)
-    genre_description = db.Column(db.String(), unique=True)
-
-
 class BooksGenres(BaseModel, db.Model):
     __tablename__ = "books_genres"
 
@@ -46,3 +36,7 @@ class BooksGenres(BaseModel, db.Model):
                          nullable=False,
                          primary_key=True,
                          unique=False)
+
+    __table_args__ = (
+        db.UniqueConstraint("book_id", "genre_id"),
+    )

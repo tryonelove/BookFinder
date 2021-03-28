@@ -1,6 +1,7 @@
 from flask import request, jsonify, current_app
 from functools import wraps
 from server.repositories import UserRepository
+
 import jwt
 
 
@@ -24,7 +25,8 @@ def token_required(f):
 
         try:
             token = auth_headers[1]
-            data = jwt.decode(token, current_app.secret_key, algorithms="HS256")
+            data = jwt.decode(token, current_app.secret_key,
+                              algorithms="HS256")
             user = UserRepository.get_by_email(email=data['sub'])
             if not user:
                 return jsonify(invalid_msg), 401
@@ -36,3 +38,7 @@ def token_required(f):
             return jsonify(invalid_msg), 401
 
     return _verify
+
+
+from .auth import Register, Login
+from .books import Book

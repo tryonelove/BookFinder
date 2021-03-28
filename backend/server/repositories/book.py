@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from server.models import Book, BooksGenres, AuthorBook
+from server.models import Book, BooksGenres, AuthorBook, UserBook, User
 
 
 class BookRepository:
@@ -13,7 +13,7 @@ class BookRepository:
             book.save()
         except IntegrityError:
             Book.rollback()
-
+            return None
         return book.to_dict()
 
     @staticmethod
@@ -22,20 +22,23 @@ class BookRepository:
         Query a book by book_id
 
         Returns json representation
-        of book 
+        of book
         """
         book = Book.query.filter_by(book_id=book_id).first()
         if book is None:
-            return {}
+            return None
         return book.to_dict()
 
     @staticmethod
-    def get_all() -> list:
+    def get_all(user_id: int = None) -> list:
         """
         Query all books
         """
-        books = Book.query.all()
-        return [book.to_dict() for book in books]
+        books = []
+        if user_id is None:
+            books = Book.query.all()
+            books = [book.to_dict() for book in books]
+        return books
 
     @staticmethod
     def delete(book_id: int) -> dict:

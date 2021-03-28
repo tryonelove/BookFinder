@@ -1,14 +1,14 @@
 import datetime
 
 import jwt
-from flask import Blueprint, session, current_app
+from flask import Blueprint, current_app
 from flask_restful import Api, Resource, reqparse
 from server.models import User
 from server.repositories import UserRepository, UserInfoRepository
 from werkzeug.security import generate_password_hash
 
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth_bp', __name__)
 
 api = Api(auth_bp)
 
@@ -16,14 +16,15 @@ api = Api(auth_bp)
 @api.resource('/api/auth/register')
 class Register(Resource):
     """
-    /api/aаuth/register endpoint
+    /api/аuth/register endpoint
     """
+
     def get_args(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('email', type=str)
-        parser.add_argument('password', type=str)
-        parser.add_argument('first_name', type=str)
-        parser.add_argument('last_name', type=str)
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('email', type=str, required=True)
+        parser.add_argument('password', type=str, required=True)
+        parser.add_argument('first_name', type=str, required=True)
+        parser.add_argument('last_name', type=str, required=True)
         args = parser.parse_args()
         return args
 
@@ -35,10 +36,13 @@ class Register(Resource):
         password = args.get('password')
         user = UserRepository.create(email=email,
                                      password=password)
+        if not user:
+            return {
+                'message': 'Email already exists',
+            }, 401
         user = UserInfoRepository.create(user_id=user.user_id,
                                          first_name=first_name,
                                          last_name=last_name)
-
         return user.to_dict(), 201
 
 
@@ -47,10 +51,11 @@ class Login(Resource):
     """
     /api/auth/login endpoint
     """
+
     def get_args(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('email', type=str)
-        parser.add_argument('password', type=str)
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('email', type=str, required=True)
+        parser.add_argument('password', type=str, required=True)
         args = parser.parse_args()
         return args
 
@@ -61,25 +66,15 @@ class Login(Resource):
         user = User.authenticate(email=email, password=password)
         if not user:
             return {
-                    'message': 'Invalid credentials',
-                    'authenticated': False
-                }, 401
+                'message': 'Invalid credentials',
+                'authenticated': False
+            }, 401
         token = jwt.encode({
             'sub': user.email,
             'iat': datetime.datetime.utcnow(),
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-            },
+        },
             current_app.secret_key,
             algorithm="HS256")
 
         return {'token': token}
-
-
-class Logout(Resource):
-    """
-    /api/logout endpoint
-    """
-    def post(self):
-        if session.get("email") is not None:
-            session['logged_in'] = False
-        return {'status': 'ok'}, 200
