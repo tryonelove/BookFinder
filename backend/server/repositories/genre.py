@@ -39,5 +39,5 @@ class GenreRepository:
         """
         genres = Genre.query.paginate(page, genres_per_page, False)
         if genres is None:
-            return {}
+            return None
         return [genre.to_dict() for genre in genres.items]

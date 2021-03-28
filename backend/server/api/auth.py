@@ -20,11 +20,11 @@ class Register(Resource):
     """
 
     def get_args(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('email', type=str)
-        parser.add_argument('password', type=str)
-        parser.add_argument('first_name', type=str)
-        parser.add_argument('last_name', type=str)
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('email', type=str, required=True)
+        parser.add_argument('password', type=str, required=True)
+        parser.add_argument('first_name', type=str, required=True)
+        parser.add_argument('last_name', type=str, required=True)
         args = parser.parse_args()
         return args
 
@@ -36,10 +36,13 @@ class Register(Resource):
         password = args.get('password')
         user = UserRepository.create(email=email,
                                      password=password)
+        if not user:
+            return {
+                'message': 'Email already exists',
+            }, 401
         user = UserInfoRepository.create(user_id=user.user_id,
                                          first_name=first_name,
                                          last_name=last_name)
-
         return user.to_dict(), 201
 
 
@@ -50,9 +53,9 @@ class Login(Resource):
     """
 
     def get_args(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('email', type=str)
-        parser.add_argument('password', type=str)
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('email', type=str, required=True)
+        parser.add_argument('password', type=str, required=True)
         args = parser.parse_args()
         return args
 

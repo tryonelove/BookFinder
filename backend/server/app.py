@@ -1,5 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_restful import Api
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
+from flask_apispec.extension import FlaskApiSpec
+from server.api import Register
 
 
 def register_flask_blueprints(app: Flask):
@@ -17,6 +22,7 @@ def register_flask_blueprints(app: Flask):
 def create_app():
     app = Flask(__name__)
     app.config.from_object('server.config.DevelopmentConfig')
+    app.config['BUNDLE_ERRORS'] = True
     app.url_map.strict_slashes = False
 
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})

@@ -38,3 +38,7 @@ def token_required(f):
             return jsonify(invalid_msg), 401
 
     return _verify
+
+
+from .auth import Register, Login
+from .books import Book

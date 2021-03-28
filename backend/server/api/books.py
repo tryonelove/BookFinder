@@ -22,7 +22,12 @@ class Book(Resource):
         return parser.parse_args()
 
     def get(self, book_id):
-        return jsonify(BookRepository.get_by_id(book_id))
+        book = BookRepository.get_by_id(book_id)
+        if book is None:
+            return {
+                'message': 'Book was not found',
+            }, 401
+        return book
 
     def delete(self, book_id):
         return BookRepository.delete(book_id)
@@ -30,9 +35,17 @@ class Book(Resource):
     def put(self, book_id):
         email = session.get("email")
         if email is None:
-            return {}
+            return {
+                'message': 'Invalid credentials',
+                'authenticated': False
+            }, 401
         args = self.get_args()
-        return BookRepository.update(book_id, args)
+        book = BookRepository.update(book_id, args)
+        if book is None:
+            return {
+                'message': "Book was not updated"
+            }, 401
+        return book
 
 
 @api.resource('/api/books')
@@ -49,11 +62,17 @@ class Books(Resource):
         return parser.parse_args()
 
     def get(self):
-        return BookRepository.get_all()
+        books = BookRepository.get_all()
+        return books
 
     def post(self):
         args = self.get_args()
         book_id = args.get('book_id')
         title = args.get('title')
         year = args.get('year')
-        return BookRepository.create(book_id, title, year)
+        book = BookRepository.create(book_id, title, year)
+        if book is None:
+            return {
+                'message': "Book was not created"
+            }, 401
+        return book

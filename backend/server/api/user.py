@@ -14,16 +14,16 @@ class UserBooks(Resource):
 
     def get_user_id(self) -> int:
         parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=int)
+        parser.add_argument('user_id', type=int, required=True)
         user_id = parser.parse_args().get("user_id")
         return user_id
 
     def get_status_rating(self) -> dict:
         parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=int)
-        parser.add_argument('book_id', type=int)
-        parser.add_argument('status', type=int)
-        parser.add_argument('rating', type=int)
+        parser.add_argument('user_id', type=int, required=True)
+        parser.add_argument('book_id', type=int, required=True)
+        parser.add_argument('status', type=int, required=True)
+        parser.add_argument('rating', type=int, required=True)
         return parser.parse_args()
 
     def get(self):
@@ -36,4 +36,5 @@ class UserBooks(Resource):
         book_id = args.get('book_id')
         status = args.get('status')
         rating = args.get('rating')
-        return UserBookRepository.update(user_id, book_id, status, rating)
+        user_book = UserBookRepository.update(user_id, book_id, status, rating)
+        return user_book

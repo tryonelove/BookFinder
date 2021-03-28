@@ -13,8 +13,7 @@ class UserRepository:
             user.flush()
         except IntegrityError:
             User.rollback()
-            raise Exception('User already exists')
-
+            return None
         return user
 
     @staticmethod
@@ -22,8 +21,6 @@ class UserRepository:
         """ Query a user by email and password"""
         user: dict = {}
         user = User.query.filter_by(email=email).first()
-        if user is None:
-            return None
         return user
 
 
@@ -39,8 +36,7 @@ class UserInfoRepository:
             user.flush()
         except IntegrityError:
             User.rollback()
-            raise Exception('User already exists')
-
+            return None
         return user
 
 
@@ -56,8 +52,8 @@ class UserGenreRepository:
             user_genres.flush()
         except IntegrityError:
             UserGenre.rollback()
-            raise Exception('Invalid data inserted')
-        return user_genres
+            return None
+        return user_genres.to_dict()
 
 
 class UserBookRepository:
@@ -71,9 +67,11 @@ class UserBookRepository:
 
     @staticmethod
     def update(user_id: int, book_id: int, rating: int, status: int) -> dict:
-        user_book = UserBook.query.filter_by(book_id=book_id, user_id=user_id).first()
+        user_book = UserBook.query.filter_by(
+            book_id=book_id, user_id=user_id).first()
         if user_book is None:
-            user_book = UserBook(user_id=user_id, book_id=book_id, rating=rating, status=status)
+            user_book = UserBook(
+                user_id=user_id, book_id=book_id, rating=rating, status=status)
         else:
             user_book.rating = rating
             user_book.status = status

@@ -13,7 +13,7 @@ class BookRepository:
             book.save()
         except IntegrityError:
             Book.rollback()
-
+            return None
         return book.to_dict()
 
     @staticmethod
@@ -26,7 +26,7 @@ class BookRepository:
         """
         book = Book.query.filter_by(book_id=book_id).first()
         if book is None:
-            return {}
+            return None
         return book.to_dict()
 
     @staticmethod
