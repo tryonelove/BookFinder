@@ -1,0 +1,11 @@
+input[value="Присоединиться"]{
+    margin-left: -182.235px;
+}
+
+.columns{
+    display: flex;
+}
+
+.firstColumn{
+    margin-right: 55px;
+}
