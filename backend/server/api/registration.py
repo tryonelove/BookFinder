@@ -11,6 +11,7 @@ class Genres(Resource):
     """
     /api/registration/genres endpoint
     """
+
     def get_user_genre(self):
         parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=int)
@@ -19,7 +20,7 @@ class Genres(Resource):
 
     def get_page(self) -> int:
         parser = reqparse.RequestParser()
-        parser.add_argument('page', type=int)
+        parser.add_argument('page', type=int, required=True)
         page = parser.parse_args().get("page")
         return page
 

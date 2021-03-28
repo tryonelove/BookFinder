@@ -9,7 +9,8 @@ class GenreRepository:
         Create a genre
         """
         try:
-            genre = Genre(genre_id=genre_id, genre_description=genre_description)
+            genre = Genre(genre_id=genre_id,
+                          genre_description=genre_description)
             genre.save()
         except IntegrityError:
             genre.rollback()
@@ -29,7 +30,6 @@ class GenreRepository:
 
         return user_genre.to_dict()
 
-
     @staticmethod
     def get(page: int, genres_per_page: int = 9) -> dict:
         """
@@ -40,4 +40,4 @@ class GenreRepository:
         genres = Genre.query.paginate(page, genres_per_page, False)
         if genres is None:
             return {}
-        return [genre.to_dict() for genre in genres]
+        return [genre.to_dict() for genre in genres.items]

@@ -5,11 +5,13 @@ from server.repositories import UserBookRepository
 user_bp = Blueprint('user_bp', __name__)
 api = Api(user_bp)
 
+
 @api.resource('/api/user/books')
 class UserBooks(Resource):
     """
     /api/user/books endpoint
     """
+
     def get_user_id(self) -> int:
         parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=int)

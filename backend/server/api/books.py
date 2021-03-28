@@ -1,17 +1,20 @@
 from flask import Blueprint, jsonify, session
 from flask_restful import Api, Resource, reqparse
 from server.repositories import BookRepository
+
 from . import token_required
+
 
 api_books_bp = Blueprint('api_books_bp', __name__)
 api = Api(api_books_bp)
 
 
-@api.resource('/api/books/<book_id>')
+@api.resource('/api/books/<int:book_id>')
 class Book(Resource):
     """
     /api/books/<book_id> endpoint
     """
+
     def get_args(self):
         parser = reqparse.RequestParser()
         parser.add_argument('status', type=int)
@@ -32,11 +35,12 @@ class Book(Resource):
         return BookRepository.update(book_id, args)
 
 
-@api.resource('/api/books', '/api/books/')
+@api.resource('/api/books')
 class Books(Resource):
     """
     /api/books endpoint
     """
+
     def get_args(self):
         parser = reqparse.RequestParser()
         parser.add_argument('book_id', type=int)
@@ -44,17 +48,7 @@ class Books(Resource):
         parser.add_argument('year', type=str)
         return parser.parse_args()
 
-    @staticmethod
-    def get_criterion() -> bool:
-        parser = reqparse.RequestParser()
-        parser.add_argument('get_all', type=bool)
-        get_all = parser.parse_args().get("get_all")
-        return get_all
-
     def get(self):
-        if not self.get_criterion():
-            email = session.get("email")
-            return BookRepository.get_all(email)
         return BookRepository.get_all()
 
     def post(self):
