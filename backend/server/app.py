@@ -1,9 +1,5 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_restful import Api
-from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
-from flask_apispec.extension import FlaskApiSpec
 from server.api import Register
 
 
