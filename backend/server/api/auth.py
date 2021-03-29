@@ -77,4 +77,4 @@ class Login(Resource):
             current_app.secret_key,
             algorithm="HS256")
 
-        return {'token': token}
+        return {'token': token }, 200

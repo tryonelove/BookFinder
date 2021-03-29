@@ -27,10 +27,11 @@ class Book(Resource):
             return {
                 'message': 'Book was not found',
             }, 401
-        return book
+        return book, 200
 
     def delete(self, book_id):
-        return BookRepository.delete(book_id)
+        book = BookRepository.delete(book_id)
+        return book, 200
 
     def put(self, book_id):
         email = session.get("email")
@@ -45,7 +46,7 @@ class Book(Resource):
             return {
                 'message': "Book was not updated"
             }, 401
-        return book
+        return book, 200
 
 
 @api.resource('/api/books')
@@ -63,7 +64,7 @@ class Books(Resource):
 
     def get(self):
         books = BookRepository.get_all()
-        return books
+        return books, 200
 
     def post(self):
         args = self.get_args()
@@ -74,5 +75,5 @@ class Books(Resource):
         if book is None:
             return {
                 'message': "Book was not created"
-            }, 401
-        return book
+            }, 409
+        return book, 200

@@ -28,7 +28,8 @@ class UserBooks(Resource):
 
     def get(self):
         user_id = self.get_user_id()
-        return UserBookRepository.get(user_id)
+        user = UserBookRepository.get(user_id)
+        return user, 200
 
     def post(self):
         args = self.get_status_rating()
@@ -36,5 +37,6 @@ class UserBooks(Resource):
         book_id = args.get('book_id')
         status = args.get('status')
         rating = args.get('rating')
-        user_book = UserBookRepository.update(user_id, book_id, status, rating)
-        return user_book
+        user_book = UserBookRepository.update(
+            user_id=user_id, book_id=book_id, status=status, rating=rating)
+        return user_book, 200

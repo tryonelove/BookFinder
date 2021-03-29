@@ -30,8 +30,8 @@ class Genres(Resource):
         if genre is None:
             return {
                 'message': "Couldn't get genre page"
-            }, 401
-        return genre
+            }, 409
+        return genre, 200
 
     def post(self):
         user_genre_ids = self.get_user_genre()
@@ -41,5 +41,5 @@ class Genres(Resource):
         if user_genre is None:
             return {
                 'message': "Couldn't add genre to user"
-            }, 401
-        return user_genre
+            }, 409
+        return user_genre, 200
