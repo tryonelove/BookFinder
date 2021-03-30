@@ -1,0 +1,113 @@
+@font-face{
+    font-family: 'Montserrat';
+    src: url(../assets/fonts/Montserrat.ttf);
+    font-display: swap;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.authorization{
+    background-image: url(../assets/images/backgroundWriters.png);
+    background-size: cover;
+    font-family: Montserrat;
+} 
+
+.authorization .header img{
+    margin-top: 40px;
+}
+
+
+.authorization .header, .main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header, .form_wrapper{
+    text-align: center;
+}
+
+.authorization .main{
+    height: calc(100vh - 149.33px);
+}
+
+.authorization .form_wrapper {
+    background-color: white;
+    border-radius: 10px;
+    padding: 0px 87px;
+    box-shadow: 0 0 20px #00000073;
+}
+
+.authorization h2{
+    font-size: 32px;
+    font-weight: normal;
+}
+
+.authorization input{
+    font-size: 19px;
+    border: none;
+    outline: none;
+}
+
+.authorization input:not([type="submit"]) {
+    border-bottom: 2px solid #BEC3C7;
+    text-align: center;
+    margin-top: 25px;
+    padding-bottom: 8px;
+}
+
+.authorization input:not([type="submit"]):focus{
+    border-bottom: 2px solid #8E518D;
+}
+
+.authorization input::-webkit-input-placeholder{
+    color: #85898C;
+    font-family: Montserrat;
+}
+
+.authorization input::-moz-placeholder{
+    color: #85898C;
+    font-family: Montserrat;
+}
+
+.authorization .form_wrapper p{
+    font-size: 12px;
+    font-style: italic;
+    color: #85898C;
+}
+
+.authorization .form_wrapper p:first-of-type, h2{
+    margin-top: 28px;
+}
+
+.authorization .form_wrapper p:last-of-type{
+    margin-bottom: 55px;
+}
+
+.authorization .form_wrapper p span{
+    text-decoration: none;
+    color: #8E518D;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.authorization .form_wrapper p span:hover{
+    color: #a852a7;
+}
+
+.authorization input[type="submit"]{
+    color: #FFFBFF;
+    background-color: #8E518D;
+    border-radius: 5px;
+    padding: 22px 109px;
+    position: absolute;
+    margin-top: -36px;
+    cursor: pointer;
+}
+
+.authorization input[type="submit"]:hover{
+    background-color: #a852a7;
+}

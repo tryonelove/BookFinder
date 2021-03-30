@@ -1,0 +1,1 @@
+export const BOOKS_NUMBER = 15
