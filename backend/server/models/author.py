@@ -27,6 +27,10 @@ class AuthorBook(BaseModel, db.Model):
                           db.ForeignKey('authors.author_id'),
                           primary_key=True)
 
+    __table_args__ = (
+        db.UniqueConstraint("book_id", "author_id"),
+    )
+
     def __init(self, book_id: int, author_id: int):
         self.book_id = book_id
         self.author_id = author_id

@@ -70,8 +70,39 @@ class UserBook(BaseModel, db.Model):
     rating = db.Column(db.Integer)
     status = db.Column(db.Integer)
 
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "book_id"),
+    )
+
     def __init(self, user_id: int, book_id: int, rating: int, status: int):
         self.user_id = user_id
         self.book_id = book_id
         self.rating = rating
         self.status = status
+
+    def to_dict(self):
+        return dict(user_id=self.user_id,
+                    book_id=self.book_id,
+                    rating=self.rating,
+                    status=self.status)
+
+
+class UserGenre(BaseModel, db.Model):
+    __tablename__ = "users_genres"
+
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.user_id'),
+                        nullable=False,
+                        primary_key=True)
+    genre_id = db.Column(db.Integer,
+                        db.ForeignKey('genres.genre_id'),
+                        nullable=False,
+                        primary_key=True)
+
+    def __init(self, user_id: int, genre_id: int):
+        self.user_id = user_id
+        self.genre_id = genre_id
+
+    def to_dict(self):
+        return dict(user_id=self.user_id,
+                    genre_id=self.genre_id)
