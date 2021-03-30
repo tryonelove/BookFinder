@@ -41,6 +41,16 @@ class BookRepository:
         return books
 
     @staticmethod
+    def get_page(page: int = None, books_per_page: int = 12) -> dict:
+        """
+        Query all books
+        """
+        books = Book.query.paginate(page, books_per_page, False)
+        if books is None:
+            return None
+        return [book.to_dict() for book in books.items]
+
+    @staticmethod
     def delete(book_id: int) -> dict:
         """
         Delete book by book_id
