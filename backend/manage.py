@@ -1,7 +1,7 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from server.app import create_app
-from server.models import db, Book, User, UserBook, UserInfo, Author, AuthorBook , UserGenre, Genre
+from server.models import db, Book, User, UserBook, UserInfo, Author, AuthorBook , UserGenre, UserRecommendations, Genre
 
 app = create_app()
 
@@ -19,6 +19,7 @@ def shell_ctx():
                 UserBook=UserBook,
                 UserInfo=UserInfo,
                 UserGenre=UserGenre,
+                UserRecommendations=UserRecommendations,
                 Genre=Genre,
                 Author=Author,
                 AuthorBook=AuthorBook)

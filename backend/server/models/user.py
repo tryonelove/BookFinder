@@ -106,3 +106,24 @@ class UserGenre(BaseModel, db.Model):
     def to_dict(self):
         return dict(user_id=self.user_id,
                     genre_id=self.genre_id)
+
+
+class UserRecommendations(BaseModel, db.Model):
+    __tablename__ = "users_recommendations"
+
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.user_id'),
+                        nullable=False,
+                        primary_key=True)
+    book_id = db.Column(db.Integer,
+                        db.ForeignKey('books.book_id'),
+                        nullable=False,
+                        primary_key=True)
+
+    def __init(self, user_id: int, book_id: int):
+        self.user_id = user_id
+        self.book_id = book_id
+
+    def to_dict(self):
+        return dict(user_id=self.user_id,
+                    book_id=self.book_id)
