@@ -10,10 +10,8 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 USER node
 RUN npm config set prefix /home/node/.npm-global
 
-RUN npm install vue-cli -g
 RUN npm install
 
+EXPOSE 3000
 
-EXPOSE 8080
-
-CMD ["npm", "run", "serve"]
+CMD ["npm", "start"]
