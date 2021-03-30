@@ -31,13 +31,13 @@ function Catalog() {
       <GeneralHeader />
       <main className="catalog_main">
         {books == null ? (
-          <Spin className="spin" size="large" />
+          <Spin className="spin" id="spin" size="large" />
         ) : (
           <>
             <Pagination
               showSizeChanger={false}
               defaultCurrent={1}
-              total={(books.length / BOOKS_NUMBER)*10}
+              total={(books.length / BOOKS_NUMBER) * 10}
               className="pagination"
               current={page}
               onChange={(page) => setPage(page)}

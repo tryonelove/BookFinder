@@ -18,7 +18,10 @@
 .spin{
     margin-top: 300px;
     height: 100vh;
+    color: #ffffff;
 }
+
+#spin i { background-color: #011627; }
 
 .catalog_main .book{
     margin: 20px;
