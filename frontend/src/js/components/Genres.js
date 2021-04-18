@@ -1,15 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Pagination } from "antd";
 
 import "../../styles/dialogBoxes.css";
+import "../../styles/genres.css";
 import AuthorizationHeader from "./AuthorizationHeader";
+import requestService from "../services/requestService";
 
 function Genres() {
+  const [genres, setGenres] = useState();
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (page != null) {
+      requestService
+        .get(`/api/registration/genres?page=${page}`)
+        .then((data) => {
+          setGenres(data);
+        });
+    }
+  }, [page]);
+
   return (
     <div className="authorization">
       <AuthorizationHeader />
-      <main className="main">
+      <main className="main genresMain">
         <div className="form_wrapper">
-          <form action=""></form>
+          <form action="">
+            <h2>Позвольте нам узнать о вас больше</h2>
+            <h3>Какие жанры вас интересуют?</h3>
+            <div className="genres">
+              {genres
+                ? genres.map((genre, index) => (
+                    <span key={index}>{genre.genre_description}</span>
+                  ))
+                : ""}
+            </div>
+            <Pagination
+              showSizeChanger={false}
+              defaultCurrent={1}
+              total={720}
+              className="pagination"
+              current={page}
+              onChange={(page) => setPage(page)}
+            />
+            <input
+              type="submit"
+              value="Продолжить"
+              // onClick={(event) => sendFormData(event)}
+            />
+          </form>
         </div>
       </main>
     </div>

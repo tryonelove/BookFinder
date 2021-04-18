@@ -20,8 +20,9 @@ function Catalog() {
 
   useEffect(() => {
     if (books == null) {
-      requestService.get("/api/books").then((data) => {
-        dispatch(addBooksAction(data));
+      requestService.get("/api/books?page=1").then((data) => {
+        console.log(data);
+        dispatch(addBooksAction(JSON.stringify(data)));
       });
     }
   }, []);
@@ -37,17 +38,15 @@ function Catalog() {
             <Pagination
               showSizeChanger={false}
               defaultCurrent={1}
-              total={(books.length / BOOKS_NUMBER) * 10}
+              total={2}
               className="pagination"
               current={page}
               onChange={(page) => setPage(page)}
             />
             <div className="catalog">
-              {books
-                .slice((page - 1) * BOOKS_NUMBER + 1, page * BOOKS_NUMBER)
-                .map((book, index) => (
-                  <Book key={index} data={book} />
-                ))}
+              {/* {books.map((book, index) => (
+                <Book key={index} data={book} />
+              ))} */}
             </div>
           </>
         )}

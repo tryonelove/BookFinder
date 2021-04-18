@@ -13,6 +13,6 @@ export function signIn(formData) {
       return;
     }
     localStorage.setItem("token", JSON.stringify(data));
-    history.push("/main");
+    history.push("/genres");
   });
 }

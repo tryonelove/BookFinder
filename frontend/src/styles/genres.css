@@ -1,0 +1,56 @@
+.genresMain{
+    display: block;
+}
+
+.genresMain .form_wrapper{
+    width: 771px;
+    margin: 0 auto;
+}
+
+.genresMain .form_wrapper p:first-of-type{
+    margin-top: 0px;
+}
+
+.form_wrapper h4{
+  height: 160px;
+  color: #fff;
+  line-height: 160px;
+  text-align: center;
+  background: #364d79;
+} 
+
+.ant-carousel{
+    padding-bottom: 25px;
+}
+
+input[value='Продолжить']{
+    margin-left: -172px;
+}
+
+.genres{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.genres, .genresMain .pagination{
+    margin-top: 20px;
+}
+
+.genresMain .pagination{
+    padding-bottom: 98px;
+}
+
+.genres span{
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.genres span:hover{
+    color: #bb69ba;
+}
+
+.genres span::first-letter{
+    color: #8E518D;
+    font-weight: 600;
+}
