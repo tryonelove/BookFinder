@@ -5,6 +5,8 @@ import "../../styles/dialogBoxes.css";
 import "../../styles/genres.css";
 import AuthorizationHeader from "./AuthorizationHeader";
 import requestService from "../services/requestService";
+import history from "../history";
+import { GENRES_PAGES_NUMBER } from "../constants/constants";
 
 function Genres() {
   const [genres, setGenres] = useState();
@@ -19,6 +21,10 @@ function Genres() {
         });
     }
   }, [page]);
+
+  function sendFormData() {
+    history.push("/main");
+  }
 
   return (
     <div className="authorization">
@@ -38,16 +44,12 @@ function Genres() {
             <Pagination
               showSizeChanger={false}
               defaultCurrent={1}
-              total={720}
+              total={GENRES_PAGES_NUMBER*10}
               className="pagination"
               current={page}
               onChange={(page) => setPage(page)}
             />
-            <input
-              type="submit"
-              value="Продолжить"
-              // onClick={(event) => sendFormData(event)}
-            />
+            <input type="submit" value="Продолжить" onClick={sendFormData()} />
           </form>
         </div>
       </main>
