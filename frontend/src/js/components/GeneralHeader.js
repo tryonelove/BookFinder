@@ -20,7 +20,7 @@ function GeneralHeader() {
         <nav className="navigation">
           <ul className="user_account_actions">
             <li>
-              <span>{`${jwt_decode(localStorage.getItem("token")).sub}`}</span>
+              <span>{`${jwt_decode(localStorage.getItem("token")).name}`}</span>
             </li>
           </ul>
         </nav>

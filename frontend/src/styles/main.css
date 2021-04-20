@@ -140,6 +140,7 @@ body{
 
   .link:hover{
     cursor: pointer;
+    filter: grayscale(75%);
   }
 
   img[alt='pushkin']{

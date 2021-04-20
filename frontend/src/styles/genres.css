@@ -46,7 +46,7 @@ input[value='Продолжить']{
     cursor: pointer;
 }
 
-.genres span:hover{
+.genres span:hover, .assigned_genre{
     color: #bb69ba;
 }
 
