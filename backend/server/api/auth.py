@@ -69,8 +69,11 @@ class Login(Resource):
                 'message': 'Invalid credentials',
                 'authenticated': False
             }, 401
+        
+        user_info = UserInfoRepository.get(user_id=user.user_id)
         token = jwt.encode({
-            'sub': user.email,
+            'id': user.user_id,
+            'name': user.get("first_name"),
             'iat': datetime.datetime.utcnow(),
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         },

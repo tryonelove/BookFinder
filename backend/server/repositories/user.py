@@ -38,7 +38,13 @@ class UserInfoRepository:
             User.rollback()
             return None
         return user
-
+    
+    @staticmethod
+    def get(user_id: int):
+        user = UserInfo.query.filter_by(user_id=user_id).first()
+        if user is None:
+            return None
+        return user.to_dict()
 
 class UserGenreRepository:
     @staticmethod
