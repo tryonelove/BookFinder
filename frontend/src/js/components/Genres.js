@@ -6,7 +6,7 @@ import "../../styles/genres.css";
 import AuthorizationHeader from "./AuthorizationHeader";
 import requestService from "../services/requestService";
 import history from "../history";
-import { GENRES_PAGES_NUMBER } from "../constants/constants";
+import { GENRES_PAGES_NUMBER, MIN_GENRES_NUMBER } from "../constants/constants";
 import Genre from "./Genre";
 
 function Genres() {
@@ -26,12 +26,13 @@ function Genres() {
 
   function sendFormData(event) {
     event.preventDefault();
-    history.push("/main");
+    genresIdList.length >= MIN_GENRES_NUMBER
+      ? history.push("/main")
+      : alert(`Минимальное количество жанров: ${MIN_GENRES_NUMBER}`);
   }
 
   function addGenreId(genreId) {
     setGenresIdList([...genresIdList, genreId]);
-    console.log(genresIdList);
   }
 
   return (
