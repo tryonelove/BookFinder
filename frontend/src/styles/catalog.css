@@ -25,12 +25,13 @@
 
 .catalog_main .book{
     margin: 20px;
-    width: 250px;
+    width: 305px;
     background-color: #ffffff;
     color: #011627;
     border-radius: 6px;
     font-weight: 500;
     border: 0px;
+    position: relative;
 }
 
 .catalog_main .book .ant-card-head{
@@ -45,3 +46,29 @@
     padding-top: 50px;
 }
 
+.catalog_main .book .ant-card-body{
+    padding: 10px 10px 35px;
+}
+
+.book .ant-rate{
+    position: absolute;
+    bottom: 15px;
+    right: 86px;
+}
+
+.book .add_button{
+    font-size: 21px;
+    display: block;
+    cursor: pointer;
+    color: #f0f0f0;
+    width: 40px;
+    margin: 0 auto;
+    padding-bottom: 3px;
+    border: 2px solid #f0f0f0;
+    border-radius: 6px;
+}
+
+.book .add_button:hover{
+    color: #fadb14;
+    border: 2px solid #fadb14;
+}

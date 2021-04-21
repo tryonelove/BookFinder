@@ -7,6 +7,7 @@ import AuthorizationHeader from "./AuthorizationHeader";
 
 import { handleInput, signIn } from "../services/authService";
 import requestService from "../services/requestService";
+import { SIGN_UP } from "../constants/constants";
 
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -30,7 +31,8 @@ function SignUp() {
       };
       requestService
         .post("/api/auth/register", formData)
-        .then(() => signIn({ email, password }));
+        .then(() => signIn({ email, password }, SIGN_UP));
+      history.push("/genres");
     } else alert("Заполните все поля");
   }
 

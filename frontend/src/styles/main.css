@@ -35,6 +35,7 @@ body{
     padding-top: 22px;
     width: 230px;
     height: 100%;
+    justify-content: space-between;
 }
 
 .navigation li{
@@ -44,14 +45,6 @@ body{
 
 .navigation li:hover{
   border-bottom: 4px solid #FFFBFF;
-}
-
-.page_actions{    
-    justify-content: space-between;
-}
-
-.user_account_actions li{
-    margin-left: 163px;
 }
 
 .logo_wrapper img{

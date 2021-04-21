@@ -24,3 +24,8 @@
 .libraryMain h1{
     font-weight: 400;
 }
+
+.week_selection_wrapper, .already_read_wrapper, .reading_now_wrapper, .want_to_read_wrapper{
+    width: 1100px;
+    margin: 100px auto;
+}

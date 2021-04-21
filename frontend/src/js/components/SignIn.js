@@ -6,6 +6,7 @@ import "../../styles/login.css";
 import AuthorizationHeader from "./AuthorizationHeader";
 
 import { handleInput, signIn } from "../services/authService";
+import { SIGN_IN } from "../constants/constants";
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ function SignIn() {
     event.preventDefault();
     if (email !== "" && password !== "") {
       const formData = { email, password };
-      signIn(formData);
+      signIn(formData, SIGN_IN);
     } else alert("Заполните все поля");
   }
 
