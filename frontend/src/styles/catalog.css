@@ -47,7 +47,7 @@
 }
 
 .catalog_main .book .ant-card-body{
-    padding: 10px 10px 35px;
+    padding: 10px 10px 20px;
 }
 
 .book .ant-rate{
@@ -71,4 +71,40 @@
 .book .add_button:hover{
     color: #fadb14;
     border: 2px solid #fadb14;
+}
+
+.ant-modal-body h4{
+    margin-top: -16px;
+}
+
+.ant-modal-body p{
+    cursor: pointer;
+    line-height: 34px;
+    padding: 0px 10px;
+    margin-bottom: 0px;
+}
+
+.ant-modal-body p:hover{
+    background-color: #E1E1E1;
+}
+
+.ant-modal-content .ant-btn-primary{
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #8E518D;
+    border-color: #8E518D;
+}
+
+.ant-modal-content .ant-btn-primary:hover{
+    background-color: #ffffff;    
+    color: #a852a7;
+    border-color: #a852a7;
+}
+
+.ant-modal-content .ant-modal-close-x{
+    color: #8E518D;
+}
+
+.ant-modal-content .ant-modal-close-x:hover{
+    color: #a852a7;
 }

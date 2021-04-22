@@ -15,7 +15,7 @@ export function signIn(formData, signType) {
     } else {
       localStorage.setItem("token", JSON.stringify(data));
       console.log(jwt_decode(JSON.stringify(data)));
-      signType == SIGN_IN ? history.push("/main") : history.push("/genres");
+      signType === SIGN_IN ? history.push("/main") : history.push("/genres");
     }
   });
 }
