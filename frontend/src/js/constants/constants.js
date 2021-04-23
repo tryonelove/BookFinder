@@ -3,4 +3,7 @@ export const BOOKS_PAGES_NUMBER = 4967;
 export const MIN_GENRES_NUMBER = 5;
 export const SIGN_IN = "sign in";
 export const SIGN_UP = "sign up";
+export const NO_RATING = 0;
+export const WANT_TO_READ = 0;
+export const READING_NOW = 1;
 export const ALREADY_READ = 2;
