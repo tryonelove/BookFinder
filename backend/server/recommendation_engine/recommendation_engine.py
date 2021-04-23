@@ -142,7 +142,7 @@ class RecommendationEngine:
             print(f'user {each_user}')
             print(self.filter_recommendations(each_user, filtered_recommendations))
 
-    def get_recommendations(self, user_id, genre_list=None):
+    def get_recommendations(self, user_id):
         """
         recommendations will be populated from database's users_recommendations table
         if there is no recommendation for a specific user_id
@@ -153,15 +153,28 @@ class RecommendationEngine:
                             where user_id = %s
                             ''', (user_id,))
         indices = list(self.db_cursor.fetchall())
-        return [idx_tuple[0] for idx_tuple in indices]
+
+        recommendations_idx = [idx_tuple[0] for idx_tuple in indices]
+
+        if not recommendations_idx:
+            self.db_cursor.execute('''select bg.book_id
+                                from users_genres ug
+                                join books_genres bg
+                                    on bg.genre_id = ug.genre_id
+                                where ug.user_id = %s
+                                limit 7;
+                                ''', (user_id,))
+            indices = list(self.db_cursor.fetchall())
+            recommendations_idx = [idx_tuple[0] for idx_tuple in indices]
+
+        return recommendations_idx
 
 
 def main():
     # so we now need to update the whole table of user recommendations
     rec_engine = RecommendationEngine()
     rec_engine.connect_to_db('book_finder', 'postgres', 'password', 'localhost')
-    # rec_engine.run_recommendations_update()
-    print(rec_engine.get_recommendations(1))
+    print(rec_engine.get_recommendations(62))
     rec_engine.close_db_connection()
 
 

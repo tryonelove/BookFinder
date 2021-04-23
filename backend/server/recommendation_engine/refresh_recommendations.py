@@ -1,5 +1,4 @@
 from recommendation_engine import RecommendationEngine
-import sys
 import argparse
 
 
