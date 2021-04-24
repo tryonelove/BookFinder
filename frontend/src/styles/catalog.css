@@ -84,7 +84,7 @@
     margin-bottom: 0px;
 }
 
-.ant-modal-body p:hover, .already_read_modal_wrapper:hover{
+ .selected_state{
     background-color: #E1E1E1;
 }
 
@@ -111,19 +111,15 @@
 
 .ant-modal-content .ant-rate{
     margin-left: 27px;
-    display: none;
-    padding-top: 31px;
-}
-
-.ant-modal-content .rate_visible{
-    display: inline;
 }
 
 .already_read_modal_wrapper{
-    display: flex;
     border-top: 1px solid #efefef;
     border-bottom: 1px solid #efefef;
 }
 
+.rate_wrapper{
+    display: flex;
+}
 
 
