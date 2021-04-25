@@ -22,9 +22,10 @@ function StateModal({ isModalVisible, currentBook, handleOk, handleCancel }) {
   }
 
   function saveState() {
-    requestService
-      .post("/api/user/books/", bodyData)
-      .then((data) => setCurrentState(""));
+    requestService.post("/api/user/books/", bodyData).then((data) => {
+      setCurrentState("");
+      handleOk();
+    });
   }
 
   return (
@@ -33,14 +34,7 @@ function StateModal({ isModalVisible, currentBook, handleOk, handleCancel }) {
       visible={isModalVisible}
       onCancel={handleCancel}
       footer={[
-        <Button
-          key="submit"
-          type="primary"
-          onClick={() => {
-            saveState();
-            handleOk();
-          }}
-        >
+        <Button key="submit" type="primary" onClick={saveState}>
           Сохранить
         </Button>,
       ]}
@@ -70,10 +64,10 @@ function StateModal({ isModalVisible, currentBook, handleOk, handleCancel }) {
           <p>Ваша оценка</p>
           <Rate
             value={defaultValue}
-            onChange={(value) =>{
+            onChange={(value) => {
               changeBookStatus(bookStates.ALREADY_READ, value);
-              setDefaultValue(value)}
-            }
+              setDefaultValue(value);
+            }}
           />
         </div>
       </div>

@@ -11,9 +11,13 @@ import "../../styles/myLibrary.css";
 import requestService from "../services/requestService";
 import { bookStates } from "../constants/constants";
 import Book from "./Book";
+import StateModal from "./StateModal";
 
 function MyLibrary() {
   const [books, setBooks] = useState(new Map());
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentBook, setCurrentBook] = useState("");
+  const [rerenderFlag, setRerenderFlag] = useState(true);
 
   useEffect(() => {
     let booksMap = new Map(initMap());
@@ -21,12 +25,12 @@ function MyLibrary() {
     requestService.get(`/api/user/books/?user_id=${userId}`).then((data) =>
       data.forEach((element) => {
         requestService.get(`/api/books/${element.book_id}`).then((data) => {
-          booksMap = groupBooks(data, element.status, booksMap);
+          booksMap = groupBooks(data, element.status, element.rating, booksMap);
           setBooks(new Map(booksMap));
         });
       })
     );
-  }, []);
+  }, [rerenderFlag]);
 
   function initMap() {
     let booksMap = new Map();
@@ -36,7 +40,7 @@ function MyLibrary() {
     return booksMap;
   }
 
-  function groupBooks(book, status, booksMap) {
+  function groupBooks(book, status,rating, booksMap) {
     console.log(status);
     switch (status) {
       case bookStates.WANT_TO_READ:
@@ -54,15 +58,35 @@ function MyLibrary() {
       case bookStates.ALREADY_READ:
         booksMap.set(bookStates.ALREADY_READ, [
           ...booksMap.get(bookStates.ALREADY_READ),
-          book,
+          {...book, rating},
         ]);
         break;
     }
     return booksMap;
   }
 
+  const showModal = (book) => {
+    setCurrentBook(book);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    rerenderFlag === true ? setRerenderFlag(false) : setRerenderFlag(true);
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <>
+      <StateModal
+        isModalVisible={isModalVisible}
+        currentBook={currentBook}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+      />
       <GeneralHeader />
       {books.get(bookStates.ALREADY_READ) ? (
         <main className="library_main">
@@ -98,13 +122,15 @@ function MyLibrary() {
             <h1>Прочитано - {books.get(bookStates.ALREADY_READ).length}</h1>
             <div className="already_read_books_wrapper catalog">
               {books.get(bookStates.ALREADY_READ).length ? (
-                books.get(bookStates.ALREADY_READ)?.map((book, index) => (
-                  <Book
-                    key={index}
-                    book={book}
-                    // showModal={() => showModal(book)}
-                  />
-                ))
+                books
+                  .get(bookStates.ALREADY_READ)
+                  ?.map((book, index) => (
+                    <Book
+                      key={index}
+                      book={book}
+                      showModal={() => showModal(book)}
+                    />
+                  ))
               ) : (
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
               )}
@@ -114,13 +140,15 @@ function MyLibrary() {
             <h1>Читаю сейчас - {books.get(bookStates.READING_NOW).length}</h1>
             <div className="reading_now_books_wrapper catalog">
               {books.get(bookStates.READING_NOW).length ? (
-                books.get(bookStates.READING_NOW).map((book, index) => (
-                  <Book
-                    key={index}
-                    book={book}
-                    // showModal={() => showModal(book)}
-                  />
-                ))
+                books
+                  .get(bookStates.READING_NOW)
+                  .map((book, index) => (
+                    <Book
+                      key={index}
+                      book={book}
+                      showModal={() => showModal(book)}
+                    />
+                  ))
               ) : (
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
               )}
@@ -132,13 +160,15 @@ function MyLibrary() {
             </h1>
             <div className="want_to_read_books_wrapper catalog">
               {books.get(bookStates.WANT_TO_READ).length ? (
-                books.get(bookStates.WANT_TO_READ).map((book, index) => (
-                  <Book
-                    key={index}
-                    book={book}
-                    // showModal={() => showModal(book)}
-                  />
-                ))
+                books
+                  .get(bookStates.WANT_TO_READ)
+                  .map((book, index) => (
+                    <Book
+                      key={index}
+                      book={book}
+                      showModal={() => showModal(book)}
+                    />
+                  ))
               ) : (
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
               )}

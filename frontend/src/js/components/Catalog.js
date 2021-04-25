@@ -27,7 +27,6 @@ function Catalog() {
   }, [page]);
 
   const showModal = (book) => {
-    console.log(book);
     setCurrentBook(book);
     setIsModalVisible(true);
   };
