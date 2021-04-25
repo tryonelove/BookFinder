@@ -7,7 +7,6 @@ import random
 
 books_genres_columns = ['title', 'rating', 'genres']
 
-
 cosine_sim_file_path = 'rec_files/cosine_similarity.csv'
 
 
@@ -39,7 +38,7 @@ class RecommendationEngine:
                         join users_books as ub
                             on b.book_id = ub.book_id
                         where ub.user_id = %s;
-                        ''', str(user_id))
+                        ''', (user_id,))
         user_books_list = list(self.db_cursor.fetchall())
         return [title_tuple[0] for title_tuple in user_books_list]
 
@@ -50,14 +49,34 @@ class RecommendationEngine:
                             group by title;
                             ''', (tuple(titles),))
         indices = list(self.db_cursor.fetchall())
-        print(indices)
         return [idx_tuple[0] for idx_tuple in indices]
+
+    def get_bids_by_genres(self, user_id) -> list:
+        self.db_cursor.execute('''select bg.book_id
+                            from users_genres ug
+                            join books_genres bg
+                                on bg.genre_id = ug.genre_id
+                            where ug.user_id = %s
+                            limit 7;
+                            ''', (user_id,))
+        indices = list(self.db_cursor.fetchall())
+        return [idx_tuple[0] for idx_tuple in indices]
+
+    def get_titles_by_bids(self, books_ids):
+        self.db_cursor.execute('''select title
+                            from books
+                            where book_id in %s;
+                            ''', (tuple(books_ids),))
+        titles = list(self.db_cursor.fetchall())
+        return [title_tuple[0] for title_tuple in titles]
 
     def get_active_users_ids(self) -> list:
         self.db_cursor.execute('''select user_id
-                             from users_books
-                             group by user_id;
-                             ''')
+                            from users_books
+                            union distinct
+                            select user_id
+                            from users_genres;
+                            ''')
         users_list = list(self.db_cursor.fetchall())
         return [user_tuple[0] for user_tuple in users_list]
 
@@ -94,7 +113,7 @@ class RecommendationEngine:
                      group by b.title;''')
         self.books_genres_df = pd.DataFrame(self.db_cursor.fetchall(), columns=books_genres_columns)
 
-        self.process_genre_based_filtering()
+        # self.process_genre_based_filtering()
 
     def get_recommendation(self, title_idx) -> list:
         column = pd.read_csv(cosine_sim_file_path, usecols=[title_idx], header=None).to_numpy()
@@ -105,9 +124,6 @@ class RecommendationEngine:
         return books_indices
 
     def filter_recommendations(self, user_id, titles_recommended) -> list:
-        # 5. filter data
-        # still have no filtering
-        # just randomly gets titles to recommend
         indices = random.sample(range(len(titles_recommended)), 7)
         result = []
         for index in indices:
@@ -116,7 +132,6 @@ class RecommendationEngine:
 
     def update_db_recommendation_table(self, user_id, titles_list) -> None:
         books_id = self.get_bids_by_titles(titles_list)
-
         for each_id in books_id:
             self.db_cursor.execute('''insert into users_recommendations(user_id, book_id)
                             values(%s, %s);''', (user_id, each_id))
@@ -124,7 +139,6 @@ class RecommendationEngine:
 
     def run_recommendations_update(self) -> None:
         self.load_data()
-
         user_ids_list = self.get_active_users_ids()
 
         self.db_cursor.execute('delete from users_recommendations;')
@@ -132,15 +146,19 @@ class RecommendationEngine:
 
         for each_user in user_ids_list:
             recommendations_list_idx = []
-            titles_list = self.get_titles_by_uid(each_user)
-            titles_index_list = self.get_indexes_in_cos_sim_matrix(titles_list)
-            for each_title in titles_index_list:
-                recommendations_list_idx += self.get_recommendation(each_title)
-            titles_recommended = self.get_titles_in_cos_sim_matrix(recommendations_list_idx)
+            users_books_titles = self.get_titles_by_uid(str(each_user))
+            if users_books_titles:
+                titles_index_list = self.get_indexes_in_cos_sim_matrix(users_books_titles)
+                for each_title in titles_index_list:
+                    recommendations_list_idx += self.get_recommendation(each_title)
+                titles_recommended = self.get_titles_in_cos_sim_matrix(recommendations_list_idx)
+            else:
+                recommendations_list_idx = self.get_bids_by_genres(each_user)
+                titles_recommended = self.get_titles_by_bids(recommendations_list_idx)
             filtered_recommendations = self.filter_recommendations(each_user, titles_recommended)
             self.update_db_recommendation_table(each_user, filtered_recommendations)
-            print(f'user {each_user}')
-            print(self.filter_recommendations(each_user, filtered_recommendations))
+            print(f'Recommendations for user {each_user}',
+                  self.filter_recommendations(each_user, filtered_recommendations))
 
     def get_recommendations(self, user_id):
         """
@@ -157,15 +175,7 @@ class RecommendationEngine:
         recommendations_idx = [idx_tuple[0] for idx_tuple in indices]
 
         if not recommendations_idx:
-            self.db_cursor.execute('''select bg.book_id
-                                from users_genres ug
-                                join books_genres bg
-                                    on bg.genre_id = ug.genre_id
-                                where ug.user_id = %s
-                                limit 7;
-                                ''', (user_id,))
-            indices = list(self.db_cursor.fetchall())
-            recommendations_idx = [idx_tuple[0] for idx_tuple in indices]
+            recommendations_idx = self.get_bids_by_genres(self, user_id)
 
         return recommendations_idx
 
@@ -174,7 +184,7 @@ def main():
     # so we now need to update the whole table of user recommendations
     rec_engine = RecommendationEngine()
     rec_engine.connect_to_db('book_finder', 'postgres', 'password', 'localhost')
-    print(rec_engine.get_recommendations(62))
+    rec_engine.run_recommendations_update()
     rec_engine.close_db_connection()
 
 
