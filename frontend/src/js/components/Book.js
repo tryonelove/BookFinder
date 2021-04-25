@@ -24,7 +24,7 @@ function Book({ book, showModal }) {
         +
       </span>
       <p>Название: {book.title}</p>
-      <p>Автор: {book.author_name}</p>
+      <p>Автор: {!book.author_name ? "Не указан" : book.author_name}</p>
       <p>Год: {book.year === "" ? "Не указан" : book.year}</p>
       {/* <Rate
         value={rating}
