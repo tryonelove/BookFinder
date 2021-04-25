@@ -9,6 +9,12 @@ services:
     depends_on: 
       - db
 
+  recommendations:
+    build: backend/server/recommendation_engine/
+    container_name: recommendation_engine
+    depends_on: 
+      - db
+
   db:
     image: postgres
     environment:

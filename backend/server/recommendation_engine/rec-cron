@@ -1,0 +1,1 @@
+0 0 * * sun python refresh_recommendations.py -db BookFinder -h localhost -u postgres -p postgres >> /var/log/cron.log 2>&1
