@@ -23,17 +23,18 @@
 
 #spin i { background-color: #011627; }
 
-.catalog_main .book{
+.catalog_main .book, .library_main .book{
     margin: 20px;
-    width: 250px;
+    width: 305px;
     background-color: #ffffff;
     color: #011627;
     border-radius: 6px;
     font-weight: 500;
     border: 0px;
+    position: relative;
 }
 
-.catalog_main .book .ant-card-head{
+.catalog_main .book .ant-card-head, .library_main .book .ant-card-head{
     background-color: #011627;
     color: #ffffff;
     border-top-left-radius: 6px;
@@ -44,4 +45,81 @@
     height: 60px;
     padding-top: 50px;
 }
+
+.catalog_main .book .ant-card-body, .library_main .book .ant-card-body{
+    padding: 10px 10px 20px;
+}
+
+.book .ant-rate{
+    position: absolute;
+    bottom: 15px;
+    right: 86px;
+}
+
+.book .add_button{
+    font-size: 21px;
+    display: block;
+    cursor: pointer;
+    color: #f0f0f0;
+    width: 40px;
+    margin: 0 auto;
+    padding-bottom: 3px;
+    border: 2px solid #f0f0f0;
+    border-radius: 6px;
+}
+
+.book .add_button:hover{
+    color: #fadb14;
+    border: 2px solid #fadb14;
+}
+
+.ant-modal-body h4{
+    margin-top: -16px;
+}
+
+.ant-modal-body p{
+    cursor: pointer;
+    line-height: 34px;
+    padding: 0px 10px;
+    margin-bottom: 0px;
+}
+
+ .selected_state{
+    background-color: #E1E1E1;
+}
+
+.ant-modal-content .ant-btn-primary{
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #8E518D;
+    border-color: #8E518D;
+}
+
+.ant-modal-content .ant-btn-primary:hover{
+    background-color: #ffffff;    
+    color: #a852a7;
+    border-color: #a852a7;
+}
+
+.ant-modal-content .ant-modal-close-x{
+    color: #8E518D;
+}
+
+.ant-modal-content .ant-modal-close-x:hover{
+    color: #a852a7;
+}
+
+.ant-modal-content .ant-rate{
+    margin-left: 27px;
+}
+
+.already_read_modal_wrapper{
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+}
+
+.rate_wrapper{
+    display: flex;
+}
+
 

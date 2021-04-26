@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Spin } from "antd";
-import { Pagination } from "antd";
+import { Spin, Pagination } from "antd";
 
 import requestService from "../services/requestService";
 import Book from "./Book";
@@ -11,12 +10,15 @@ import "../../styles/catalog.css";
 import GeneralHeader from "./GeneralHeader";
 import { addBooksAction } from "../redux/booksReducer";
 
-import { BOOKS_NUMBER, BOOKS_PAGES_NUMBER } from "../constants/constants";
+import { BOOKS_PAGES_NUMBER } from "../constants/constants";
+import StateModal from "./StateModal";
 
 function Catalog() {
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const books = useSelector((state) => state.books);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentBook, setCurrentBook] = useState("");
 
   useEffect(() => {
     requestService.get(`/api/books?page=${page}`).then((data) => {
@@ -24,8 +26,27 @@ function Catalog() {
     });
   }, [page]);
 
+  const showModal = (book) => {
+    setCurrentBook(book);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <>
+      <StateModal
+        isModalVisible={isModalVisible}
+        currentBook={currentBook}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+      />
       <GeneralHeader />
       <main className="catalog_main">
         {books == null ? (
@@ -42,7 +63,11 @@ function Catalog() {
             />
             <div className="catalog">
               {books.map((book, index) => (
-                <Book key={index} data={book} />
+                <Book
+                  key={index}
+                  book={book}
+                  showModal={() => showModal(book)}
+                />
               ))}
             </div>
           </>

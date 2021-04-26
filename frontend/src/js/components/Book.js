@@ -1,15 +1,18 @@
-import { Card, Image } from "antd";
+import { Card, Image, Rate } from "antd";
 
 import BookImg from "../../assets/images/book.jpg";
 
-function Book(props) {
-  const { data } = props;
+function Book({ book, showModal }) {
   return (
-    <Card title={data.title} className="book">
+    <Card title={book.title} className="book">
       <Image width={150} height={150} src={BookImg} />
-      <p>Название: {data.title}</p>
-      <p>Автор: {data.author_name}</p>
-      <p>Год: {data.year === "" ? "Не указан" : data.year}</p>
+      <span className="add_button" onClick={showModal}>
+        +
+      </span>
+      <p>Название: {book.title}</p>
+      <p>Автор: {!book.author_name ? "Не указан" : book.author_name}</p>
+      <p>Год: {book.year === "" || !book.year ? "Не указан" : book.year}</p>
+      {book.rating ? <Rate disabled value={book.rating} /> : ""}
     </Card>
   );
 }

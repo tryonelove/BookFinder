@@ -38,7 +38,12 @@ function Main() {
               />
             </div>
             <div className="right_side_link">
-              <img className="link" src={MyLibrary} alt="my library" />
+              <img
+                className="link"
+                src={MyLibrary}
+                alt="my library"
+                onClick={() => history.push("/myLibrary")}
+              />
             </div>
           </div>
         </section>
