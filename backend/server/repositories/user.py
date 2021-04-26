@@ -1,7 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 from server.models.user import User, UserGenre, UserBook, UserInfo, UserRecommendations
 from server.models.book import Book, BooksGenres
-
+from sqlalchemy.sql.expression import func, select
 
 class UserRepository:
     @staticmethod
@@ -94,14 +94,19 @@ class UserRecommendationsRepository:
             "books": []
         }
         
-        recs = UserRecommendations.query.join(Book, UserRecommendations.book_id == Book.book_id).add_columns(UserRecommendations.user_id, UserRecommendations.book_id, Book.title).filter(UserRecommendations.user_id == user_id)
+        recs = UserRecommendations.query \
+            .join(Book, UserRecommendations.book_id == Book.book_id) \
+            .add_columns(UserRecommendations.user_id, UserRecommendations.book_id, Book.title) \
+            .filter(UserRecommendations.user_id == user_id)
         first_rec = recs.first()
+
         if first_rec is None:
-            recs = UserGenre.query.join(BooksGenres, UserGenre.genre_id == BooksGenres.genre_id) \
-                    .distinct() \
-                    .join(Book, BooksGenres.book_id == Book.book_id) \
-                    .add_columns(Book.book_id, Book.title) \
-                    .limit(7)
+            recs = BooksGenres.query.join(UserGenre, UserGenre.genre_id == BooksGenres.genre_id) \
+                        .join(Book, Book.book_id == BooksGenres.book_id) \
+                        .add_columns(Book.book_id, Book.title) \
+                        .order_by(func.random()) \
+                        .limit(7)
+
         for book in recs:
             recommendations["books"].append(
                 {
