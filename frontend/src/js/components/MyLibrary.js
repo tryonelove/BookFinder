@@ -15,6 +15,7 @@ import StateModal from "./StateModal";
 
 function MyLibrary() {
   const [books, setBooks] = useState(new Map());
+  const [recBooks, setRecBooks] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentBook, setCurrentBook] = useState("");
   const [rerenderFlag, setRerenderFlag] = useState(true);
@@ -32,6 +33,13 @@ function MyLibrary() {
     );
   }, [rerenderFlag]);
 
+  useEffect(() => {
+    const userId = jwt_decode(localStorage.getItem("token")).id;
+    requestService
+      .get(`/api/user/recommendations/?user_id=${userId}`)
+      .then((data) => setRecBooks(data.books));
+  }, []);
+
   function initMap() {
     let booksMap = new Map();
     booksMap.set(bookStates.WANT_TO_READ, []);
@@ -40,7 +48,7 @@ function MyLibrary() {
     return booksMap;
   }
 
-  function groupBooks(book, status,rating, booksMap) {
+  function groupBooks(book, status, rating, booksMap) {
     console.log(status);
     switch (status) {
       case bookStates.WANT_TO_READ:
@@ -58,7 +66,7 @@ function MyLibrary() {
       case bookStates.ALREADY_READ:
         booksMap.set(bookStates.ALREADY_READ, [
           ...booksMap.get(bookStates.ALREADY_READ),
-          {...book, rating},
+          { ...book, rating },
         ]);
         break;
     }
@@ -88,96 +96,130 @@ function MyLibrary() {
         handleCancel={handleCancel}
       />
       <GeneralHeader />
-      {books.get(bookStates.ALREADY_READ) ? (
-        <main className="library_main">
-          <section className="general_user_info_wrapper">
-            <div className="image_wrapper">
-              <Image width={200} src={BookWormImage} />
+      <main className="library_main">
+        <section className="general_user_info_wrapper">
+          <div className="image_wrapper">
+            <Image width={200} src={BookWormImage} />
+          </div>
+          <div className="user_info_wrapper">
+            <p>{jwt_decode(localStorage.getItem("token")).name}</p>
+            <div className="books_info_wrapper">
+              <span>
+                Прочитано:{" "}
+                <strong>
+                  {books.get(bookStates.ALREADY_READ)
+                    ? books.get(bookStates.ALREADY_READ).length
+                    : 0}
+                </strong>
+              </span>
+              <span>
+                Читаю сейчас:{" "}
+                <strong>
+                  {books.get(bookStates.READING_NOW)
+                    ? books.get(bookStates.READING_NOW).length
+                    : 0}
+                </strong>
+              </span>
+              <span>
+                Хочу прочитать:{" "}
+                <strong>
+                  {books.get(bookStates.WANT_TO_READ)
+                    ? books.get(bookStates.WANT_TO_READ).length
+                    : 0}
+                </strong>
+              </span>
             </div>
-            <div className="user_info_wrapper">
-              <p>{jwt_decode(localStorage.getItem("token")).name}, Фамилия</p>
-              <div className="books_info_wrapper">
-                <span>
-                  Прочитано:{" "}
-                  <strong>{books.get(bookStates.ALREADY_READ).length}</strong>
-                </span>
-                <span>
-                  Читаю сейчас:{" "}
-                  <strong>{books.get(bookStates.READING_NOW).length}</strong>
-                </span>
-                <span>
-                  Хочу прочитать:{" "}
-                  <strong>{books.get(bookStates.WANT_TO_READ).length}</strong>
-                </span>
-              </div>
-            </div>
-          </section>
-          <section className="week_selection_wrapper">
-            <h1>Подборка недели</h1>
-            <div className="week_selection_books_wrapper catalog">
+          </div>
+        </section>
+        <section className="week_selection_wrapper">
+          <h1>Подборка недели</h1>
+          <div className="week_selection_books_wrapper catalog">
+            {recBooks ? (
+              recBooks.map((book, index) => (
+                <Book
+                  key={index}
+                  book={book}
+                  showModal={() => showModal(book)}
+                />
+              ))
+            ) : (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </div>
-          </section>
-          <section className="already_read_wrapper">
-            <h1>Прочитано - {books.get(bookStates.ALREADY_READ).length}</h1>
-            <div className="already_read_books_wrapper catalog">
-              {books.get(bookStates.ALREADY_READ).length ? (
-                books
-                  .get(bookStates.ALREADY_READ)
-                  ?.map((book, index) => (
-                    <Book
-                      key={index}
-                      book={book}
-                      showModal={() => showModal(book)}
-                    />
-                  ))
-              ) : (
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              )}
-            </div>
-          </section>
-          <section className="reading_now_wrapper">
-            <h1>Читаю сейчас - {books.get(bookStates.READING_NOW).length}</h1>
-            <div className="reading_now_books_wrapper catalog">
-              {books.get(bookStates.READING_NOW).length ? (
-                books
-                  .get(bookStates.READING_NOW)
-                  .map((book, index) => (
-                    <Book
-                      key={index}
-                      book={book}
-                      showModal={() => showModal(book)}
-                    />
-                  ))
-              ) : (
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              )}
-            </div>
-          </section>
-          <section className="want_to_read_wrapper">
-            <h1>
-              Хочу прочитать - {books.get(bookStates.WANT_TO_READ).length}
-            </h1>
-            <div className="want_to_read_books_wrapper catalog">
-              {books.get(bookStates.WANT_TO_READ).length ? (
-                books
-                  .get(bookStates.WANT_TO_READ)
-                  .map((book, index) => (
-                    <Book
-                      key={index}
-                      book={book}
-                      showModal={() => showModal(book)}
-                    />
-                  ))
-              ) : (
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              )}
-            </div>
-          </section>
-        </main>
-      ) : (
-        ""
-      )}
+            )}
+          </div>
+        </section>
+        <section className="already_read_wrapper">
+          <h1>
+            Прочитано -{" "}
+            {books.get(bookStates.ALREADY_READ)
+              ? books.get(bookStates.ALREADY_READ).length
+              : 0}
+          </h1>
+          <div className="already_read_books_wrapper catalog">
+            {books.get(bookStates.ALREADY_READ) &&
+            books.get(bookStates.ALREADY_READ).length ? (
+              books
+                .get(bookStates.ALREADY_READ)
+                ?.map((book, index) => (
+                  <Book
+                    key={index}
+                    book={book}
+                    showModal={() => showModal(book)}
+                  />
+                ))
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
+          </div>
+        </section>
+        <section className="reading_now_wrapper">
+          <h1>
+            Читаю сейчас -{" "}
+            {books.get(bookStates.READING_NOW)
+              ? books.get(bookStates.READING_NOW).length
+              : 0}
+          </h1>
+          <div className="reading_now_books_wrapper catalog">
+            {books.get(bookStates.READING_NOW) &&
+            books.get(bookStates.READING_NOW).length ? (
+              books
+                .get(bookStates.READING_NOW)
+                .map((book, index) => (
+                  <Book
+                    key={index}
+                    book={book}
+                    showModal={() => showModal(book)}
+                  />
+                ))
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
+          </div>
+        </section>
+        <section className="want_to_read_wrapper">
+          <h1>
+            Хочу прочитать -{" "}
+            {books.get(bookStates.WANT_TO_READ)
+              ? books.get(bookStates.WANT_TO_READ).length
+              : 0}
+          </h1>
+          <div className="want_to_read_books_wrapper catalog">
+            {books.get(bookStates.WANT_TO_READ) &&
+            books.get(bookStates.WANT_TO_READ).length ? (
+              books
+                .get(bookStates.WANT_TO_READ)
+                .map((book, index) => (
+                  <Book
+                    key={index}
+                    book={book}
+                    showModal={() => showModal(book)}
+                  />
+                ))
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
+          </div>
+        </section>
+      </main>
       <Footer />
     </>
   );
