@@ -11,7 +11,7 @@ import "../../styles/catalog.css";
 import GeneralHeader from "./GeneralHeader";
 import { addBooksAction } from "../redux/booksReducer";
 
-import { BOOKS_NUMBER } from "../constants/constants";
+import { BOOKS_NUMBER, BOOKS_PAGES_NUMBER } from "../constants/constants";
 
 function Catalog() {
   const [page, setPage] = useState(1);
@@ -19,12 +19,10 @@ function Catalog() {
   const books = useSelector((state) => state.books);
 
   useEffect(() => {
-    if (books == null) {
-      requestService.get("/api/books").then((data) => {
-        dispatch(addBooksAction(data));
-      });
-    }
-  }, []);
+    requestService.get(`/api/books?page=${page}`).then((data) => {
+      dispatch(addBooksAction(data));
+    });
+  }, [page]);
 
   return (
     <>
@@ -37,17 +35,15 @@ function Catalog() {
             <Pagination
               showSizeChanger={false}
               defaultCurrent={1}
-              total={(books.length / BOOKS_NUMBER) * 10}
+              total={BOOKS_PAGES_NUMBER * 10}
               className="pagination"
               current={page}
               onChange={(page) => setPage(page)}
             />
             <div className="catalog">
-              {books
-                .slice((page - 1) * BOOKS_NUMBER + 1, page * BOOKS_NUMBER)
-                .map((book, index) => (
-                  <Book key={index} data={book} />
-                ))}
+              {books.map((book, index) => (
+                <Book key={index} data={book} />
+              ))}
             </div>
           </>
         )}

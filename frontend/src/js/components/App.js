@@ -10,6 +10,7 @@ import SignUp from "./SignUp";
 import Main from "./Main";
 import Genres from "./Genres";
 import Catalog from "./Catalog";
+import MyLibrary from "./MyLibrary";
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
         </Route>
         <Route path="/genres">
           <Genres />
+        </Route>
+        <Route path="/myLibrary">
+          <MyLibrary />
         </Route>
         <Route exact path="/">
           {localStorage.getItem("token") ? <Main /> : <SignIn />}

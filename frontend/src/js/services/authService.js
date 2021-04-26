@@ -1,4 +1,5 @@
 import history from "../history";
+import jwt_decode from "jwt-decode";
 
 import RequestService from "../services/requestService";
 
@@ -13,6 +14,7 @@ export function signIn(formData) {
       return;
     }
     localStorage.setItem("token", JSON.stringify(data));
-    history.push("/main");
+    console.log(jwt_decode(JSON.stringify(data)));
+    history.push("/genres");
   });
 }

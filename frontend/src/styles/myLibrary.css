@@ -1,0 +1,26 @@
+.general_user_info_wrapper {
+    display: flex;
+    width: 925px;
+    margin: 0 auto;
+    padding-top: 30px;
+}
+
+.user_info_wrapper{
+    width: 100%;
+    margin-left: 44px;
+    padding-top: 35px;
+}
+
+.user_info_wrapper p, .libraryMain h1{
+    font-size: 32px;
+}
+
+.books_info_wrapper{
+    display: flex;
+    justify-content: space-between;
+    font-size: 26px;
+}
+
+.libraryMain h1{
+    font-weight: 400;
+}
