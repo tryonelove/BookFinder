@@ -88,7 +88,7 @@ class UserRecommendationsRepository:
             "books": []
         }
         try:
-            recs = UserRecommendations.query.join(Book, UserRecommendations.book_id == Book.book_id).add_columns(UserRecommendations.user_id, UserRecommendations.book_id, Book.title)
+            recs = UserRecommendations.query.join(Book, UserRecommendations.book_id == Book.book_id).add_columns(UserRecommendations.user_id, UserRecommendations.book_id, Book.title).filter_by(user_id=user_id)
         except:
             return recommendations
         if recs is not None:
