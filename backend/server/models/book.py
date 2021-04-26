@@ -14,7 +14,6 @@ class Book(BaseModel, db.Model):
 
     def __init(self, book_id: int, title: str, year: str):
         self.title = title
-        self.title = title
         self.year = year
 
     def to_dict(self):

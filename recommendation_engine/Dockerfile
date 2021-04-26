@@ -1,9 +1,15 @@
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get -y install cron
+RUN apt-get update && \
+    apt-get -y install cron && \
+    apt-get -y install python3.8
+
+
+COPY recommendation_engine.py /app
+COPY refresh_recommendations.py /app
 
 # Copy hello-cron file to the cron.d directory
-COPY rec-cron /etc/cron.d/rec-cron
+COPY ./rec-cron /etc/cron.d/rec-cron
  
 # Give execution rights on the cron job
 RUN chmod 0644 /etc/cron.d/rec-cron

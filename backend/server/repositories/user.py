@@ -1,5 +1,6 @@
 from sqlalchemy.exc import IntegrityError
-from server.models.user import User, UserGenre, UserBook, UserInfo
+from server.models.user import User, UserGenre, UserBook, UserInfo, UserRecommendations
+from server.models.book import Book
 
 
 class UserRepository:
@@ -77,3 +78,25 @@ class UserBookRepository:
             user_book.status = status
         user_book.save()
         return user_book.to_dict()
+
+
+class UserRecommendationsRepository:
+    @staticmethod
+    def get(user_id: int):
+        recommendations = {
+            "user_id": user_id,
+            "books": []
+        }
+        try:
+            recs = UserRecommendations.query.join(Book, UserRecommendations.book_id == Book.book_id).add_columns(UserRecommendations.user_id, UserRecommendations.book_id, Book.title)
+        except:
+            return recommendations
+        if recs is not None:
+            for book in recs:
+                recommendations["books"].append(
+                    {
+                        "book_id": book.book_id,
+                        "title": book.title
+                    }
+                )
+        return recommendations
