@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from server.models.user import User, UserGenre, UserBook, UserInfo, UserRecommendations
-from server.models.book import Book
+from server.models.book import Book, BooksGenres
 
 
 class UserRepository:
@@ -87,16 +87,21 @@ class UserRecommendationsRepository:
             "user_id": user_id,
             "books": []
         }
-        try:
-            recs = UserRecommendations.query.join(Book, UserRecommendations.book_id == Book.book_id).add_columns(UserRecommendations.user_id, UserRecommendations.book_id, Book.title).filter_by(user_id=user_id)
-        except:
-            return recommendations
-        if recs is not None:
-            for book in recs:
-                recommendations["books"].append(
-                    {
-                        "book_id": book.book_id,
-                        "title": book.title
-                    }
-                )
+        
+        recs = UserRecommendations.query.join(Book, UserRecommendations.book_id == Book.book_id).add_columns(UserRecommendations.user_id, UserRecommendations.book_id, Book.title).filter(UserRecommendations.user_id == user_id)
+        first_rec = recs.first()
+        if first_rec is None:
+            recs = UserGenre.query.join(BooksGenres, UserGenre.genre_id == BooksGenres.genre_id) \
+                    .distinct() \
+                    .join(Book, BooksGenres.book_id == Book.book_id) \
+                    .add_columns(Book.book_id, Book.title) \
+                    .limit(7)
+        for book in recs:
+            recommendations["books"].append(
+                {
+                    "book_id": book.book_id,
+                    "title": book.title
+                }
+            )
+
         return recommendations

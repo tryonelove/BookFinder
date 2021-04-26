@@ -113,7 +113,7 @@ class RecommendationEngine:
                      group by b.title;''')
         self.books_genres_df = pd.DataFrame(self.db_cursor.fetchall(), columns=books_genres_columns)
 
-        # self.process_genre_based_filtering()
+        self.process_genre_based_filtering()
 
     def get_recommendation(self, title_idx) -> list:
         column = pd.read_csv(cosine_sim_file_path, usecols=[title_idx], header=None).to_numpy()
