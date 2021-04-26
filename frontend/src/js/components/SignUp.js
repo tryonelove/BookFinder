@@ -5,7 +5,7 @@ import "../../styles/dialogBoxes.css";
 import "../../styles/registration.css";
 import AuthorizationHeader from "./AuthorizationHeader";
 
-import { handleInput } from "../services/authService";
+import { handleInput, signIn } from "../services/authService";
 import requestService from "../services/requestService";
 
 function SignUp() {
@@ -28,10 +28,9 @@ function SignUp() {
         first_name: firstName,
         last_name: lastName,
       };
-      console.log(formData);
       requestService
         .post("/api/auth/register", formData)
-        .then((data) => console.log("d"));
+        .then(() => signIn({ email, password }));
     } else alert("Заполните все поля");
   }
 

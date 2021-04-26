@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError
-from server.models import Book, BooksGenres, AuthorBook, UserBook, User
-
+from server.models import Book, BooksGenres, AuthorBook, UserBook, User, Author
+from server.models import db
 
 class BookRepository:
     @staticmethod
@@ -39,6 +39,19 @@ class BookRepository:
             books = Book.query.all()
             books = [book.to_dict() for book in books]
         return books
+
+    @staticmethod
+    def get_page(page: int = None, books_per_page: int = 12) -> dict:
+        """
+        Query all books
+        """
+        books = db.session.query(Book, AuthorBook, Author) \
+                .join(AuthorBook, Book.book_id == AuthorBook.book_id) \
+                .join(Author, Author.author_id == AuthorBook.author_id) \
+                .paginate(page, books_per_page, False)
+        if books is None:
+            return None
+        return [{**(book.to_dict()), **(author_book.to_dict()), **(author.to_dict())} for book, author_book, author in books.items]
 
     @staticmethod
     def delete(book_id: int) -> dict:

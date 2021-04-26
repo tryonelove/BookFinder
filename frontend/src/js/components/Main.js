@@ -1,4 +1,5 @@
 import React from "react";
+import history from "../history";
 
 import GeneralHeader from "./GeneralHeader";
 import Footer from "./Footer";
@@ -29,7 +30,12 @@ function Main() {
           <div className="links_wrapper">
             <div className="left_side_link">
               <img src={Pushkin} alt="pushkin" />
-              <img className="link" src={Catalog} alt="catalog" />
+              <img
+                className="link"
+                src={Catalog}
+                alt="catalog"
+                onClick={() => history.push("/catalog")}
+              />
             </div>
             <div className="right_side_link">
               <img className="link" src={MyLibrary} alt="my library" />

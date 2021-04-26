@@ -1,6 +1,8 @@
 import React from "react";
+import jwt_decode from "jwt-decode";
 
 import Logo from "../../assets/images/logo.svg";
+import history from "../history";
 
 function GeneralHeader() {
   return (
@@ -8,7 +10,7 @@ function GeneralHeader() {
       <div className="header_content_wrapper">
         <nav className="navigation">
           <ul className="page_actions">
-            <li>Главная</li>
+            <li onClick={() => history.push("/main")}>Главная</li>
             <li>Лента</li>
           </ul>
         </nav>
@@ -18,7 +20,7 @@ function GeneralHeader() {
         <nav className="navigation">
           <ul className="user_account_actions">
             <li>
-              <span>{"$user1"}</span>
+              <span>{`${jwt_decode(localStorage.getItem("token")).name}`}</span>
             </li>
           </ul>
         </nav>

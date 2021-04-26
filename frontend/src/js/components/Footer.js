@@ -7,7 +7,7 @@ function Footer() {
       <p>
         с{" "}
         <span>
-          <img src={Heart} />
+          <img src={Heart} alt="heart" />
         </span>{" "}
         к тому, что делаем
       </p>

@@ -62,8 +62,15 @@ class Books(Resource):
         parser.add_argument('year', type=str)
         return parser.parse_args()
 
+    def get_page(self) -> int:
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int)
+        page = parser.parse_args().get("page")
+        return page
+
     def get(self):
-        books = BookRepository.get_all()
+        page = self.get_page()
+        books = BookRepository.get_page(page=page)
         return books, 200
 
     def post(self):

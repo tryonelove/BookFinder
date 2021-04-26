@@ -1,11 +1,14 @@
 async function makeRequest(requestType, URL, data) {
-  let response = await fetch(`http://localhost:5000${URL}`, {
+  const response = await fetch(`http://localhost:5000${URL}`, {
     method: `${requestType}`,
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body:  JSON.stringify(data),
+    mode: "cors",
+    headers:
+      requestType === "POST"
+        ? {
+            "Content-Type": "application/json",
+          }
+        : {},
+    body: requestType === "POST" ? JSON.stringify(data) : null,
   });
   return await response.json();
 }

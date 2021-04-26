@@ -4,9 +4,8 @@ import history from "../history";
 import "../../styles/dialogBoxes.css";
 import "../../styles/login.css";
 import AuthorizationHeader from "./AuthorizationHeader";
-import RequestService from "../services/requestService";
 
-import { handleInput } from "../services/authService";
+import { handleInput, signIn } from "../services/authService";
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -16,10 +15,7 @@ function SignIn() {
     event.preventDefault();
     if (email !== "" && password !== "") {
       const formData = { email, password };
-      console.log(formData);
-      RequestService.post("/api/auth/login", formData).then((data) =>
-        console.log("d")
-      );
+      signIn(formData);
     } else alert("Заполните все поля");
   }
 

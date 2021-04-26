@@ -15,6 +15,9 @@ class Author(BaseModel, db.Model):
         self.author_id = author_id
         self.author_name = author_name
 
+    def to_dict(self):
+        return dict(author_id=self.author_id, author_name=self.author_name)
+
 
 class AuthorBook(BaseModel, db.Model):
     __tablename__ = "authors_books"
@@ -34,3 +37,6 @@ class AuthorBook(BaseModel, db.Model):
     def __init(self, book_id: int, author_id: int):
         self.book_id = book_id
         self.author_id = author_id
+
+    def to_dict(self):
+        return dict(book_id=self.book_id, author_id=self.author_id)
